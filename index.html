@@ -472,6 +472,8 @@ $('forceRot').addEventListener('click',()=>{forceRot=true;try{localStorage.setIt
 addEventListener('resize',layout);addEventListener('orientationchange',()=>setTimeout(layout,200));
 
 /* ================= quality ================= */
+const IOS_DEV=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),MOBILE_DEV=IOS_DEV||/Android|Mobi/i.test(navigator.userAgent);
+let TEX_CAP=4096;
 let HIGH=true;
 try{HIGH=localStorage.getItem('adf-q')!=='low'}catch(_){}
 function setQ(h){HIGH=h;$('qHigh').setAttribute('aria-pressed',h);$('qLow').setAttribute('aria-pressed',!h);try{localStorage.setItem('adf-q',h?'high':'low')}catch(_){}applyQ()}
@@ -530,12 +532,12 @@ cam=new THREE.PerspectiveCamera(55,1,1.5,170000);
 scene.fog=new THREE.FogExp2(0xe0a070,.0000175);
 const hemi=new THREE.HemisphereLight(lin(0xb9cdf2),lin(0x9a6c4a),.55);scene.add(hemi);
 const sun=new THREE.DirectionalLight(lin(0xffcf9a),2.4);
-sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
+sun.castShadow=true;sun.shadow.mapSize.set(IOS_DEV?1024:2048,IOS_DEV?1024:2048);
 const SC=sun.shadow.camera;SC.left=-650;SC.right=650;SC.top=650;SC.bottom=-650;SC.near=10;SC.far=6000;
 sun.shadow.bias=-.0004;sun.shadow.normalBias=.6;
 scene.add(sun);scene.add(sun.target);
 function applyQ(){
-  R.setPixelRatio(Math.min(HIGH?2:1.25,window.devicePixelRatio||1));
+  R.setPixelRatio(Math.min(HIGH?(IOS_DEV?1.5:2):1.25,window.devicePixelRatio||1));
   R.shadowMap.enabled=HIGH;sun.castShadow=HIGH;
   scene.traverse(o=>{if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.needsUpdate=true)}});
   if(F){[F.me,...F.others].forEach(b=>b.shadow.visible=!HIGH)}
@@ -1568,13 +1570,14 @@ function assetProgress(){
 class BlobFreeTextures{
   constructor(parser){this.parser=parser;this.name='adf_blobfree_textures'}
   loadTexture(index){
-    const P=this.parser,json=P.json,td=json.textures[index];if(!td||td.source===undefined)return null;const src=json.images[td.source];
+    const P=this.parser,json=P.json,td=json.textures[index],cap=TEX_CAP;if(!td||td.source===undefined)return null;const src=json.images[td.source];
     if(!src||src.bufferView===undefined||typeof createImageBitmap!=='function')return null;
     const W={33071:THREE.ClampToEdgeWrapping,33648:THREE.MirroredRepeatWrapping,10497:THREE.RepeatWrapping};
     const Fm={9728:THREE.NearestFilter,9729:THREE.LinearFilter,9984:THREE.NearestMipmapNearestFilter,9985:THREE.LinearMipmapNearestFilter,9986:THREE.NearestMipmapLinearFilter,9987:THREE.LinearMipmapLinearFilter};
     return P.getDependency('bufferView',src.bufferView).then(bv=>{const blob=new Blob([bv],{type:src.mimeType});
         return createImageBitmap(blob,{premultiplyAlpha:'none'}).catch(()=>createImageBitmap(blob))})
-      .then(bmp=>{const t=new THREE.CanvasTexture(bmp);t.flipY=false;if(td.name)t.name=td.name;if(src.mimeType==='image/jpeg')t.format=THREE.RGBFormat;
+      .then(bmp=>{const m=Math.max(bmp.width,bmp.height);if(m<=cap)return bmp;const k=cap/m,c=document.createElement('canvas');c.width=Math.max(1,Math.round(bmp.width*k));c.height=Math.max(1,Math.round(bmp.height*k));c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);if(bmp.close)bmp.close();return c})
+      .then(bmp=>{const t=new THREE.CanvasTexture(bmp);if(MOBILE_DEV)t.onUpdate=()=>{const im=t.image;if(im&&im.close)im.close();else if(im&&im.getContext){im.width=1;im.height=1}};t.flipY=false;if(td.name)t.name=td.name;if(src.mimeType==='image/jpeg')t.format=THREE.RGBFormat;
         const sm=(json.samplers||{})[td.sampler]||{};t.magFilter=Fm[sm.magFilter]||THREE.LinearFilter;t.minFilter=Fm[sm.minFilter]||THREE.LinearMipmapLinearFilter;
         t.wrapS=W[sm.wrapS]||THREE.RepeatWrapping;t.wrapT=W[sm.wrapT]||THREE.RepeatWrapping;if(P.associations)P.associations.set(t,{type:'textures',index});return t});
   }
@@ -1589,19 +1592,22 @@ function embeddedToGLB(text){
   dv.setUint32(20+jl,bytes.length,true);dv.setUint32(24+jl,0x004E4942,true);u8.set(bytes,28+jl);return out}
 function loadAssets(){
   if(!THREE.GLTFLoader||!THREE.SkeletonUtils){ASSETS.failed=true;assetProgress();return}
-  const L=new THREE.GLTFLoader(),files={people:'people',veh:'vehicles',basket:'basket'},SZ={people:11.7e6,veh:4e6,basket:.65e6};let left=3;
+  const L=new THREE.GLTFLoader(),files={basket:'basket',veh:'vehicles',people:'people'},SZ={people:11.7e6,veh:4e6,basket:.65e6},keys=Object.keys(files);
+  const CAP={basket:1024,veh:MOBILE_DEV?1024:4096,people:IOS_DEV?512:MOBILE_DEV?1024:4096};
   try{L.register(p=>new BlobFreeTextures(p))}catch(e){console.warn('textures plugin',e)}
-  const fail=(k,e)=>{console.warn('asset',files[k],e);ASSETS.failed=true;assetProgress()};
-  for(const k in files){
-    const x=new XMLHttpRequest();x.open('GET',ASSET_URL+files[k]+'.json');x.responseType='text';
+  let dead=false;const fail=(k,e)=>{if(dead)return;dead=true;console.warn('asset',files[k],e);ASSETS.failed=true;assetProgress()};
+  const next=i=>{
+    if(dead)return;if(i>=keys.length){try{assetsReady()}catch(e){console.warn('asset setup',e);ASSETS.failed=true;assetProgress()}return}
+    const k=keys[i];let x=new XMLHttpRequest();x.open('GET',ASSET_URL+files[k]+'.json');x.responseType='text';
     x.onprogress=e=>{ASSETS.prog[k]=Math.min(.97,e.lengthComputable&&e.total?e.loaded/e.total:e.loaded/SZ[k]);assetProgress()};
     x.onerror=()=>fail(k,'network');
     x.onload=()=>{if(!(x.status>=200&&x.status<300)||!x.responseText){fail(k,'HTTP '+x.status);return}
-      let glb;try{glb=embeddedToGLB(x.responseText)}catch(e){fail(k,e);return}
-      L.parse(glb,'',g=>{ASSETS.parts[k]=g;ASSETS.prog[k]=1;assetProgress();if(--left===0){try{assetsReady()}catch(e){console.warn('asset setup',e);ASSETS.failed=true;assetProgress()}}},e=>fail(k,e))};
-    x.send();
-  }
-  setTimeout(()=>{if(!ASSETS.ready&&!ASSETS.failed){ASSETS.failed=true;ASSETS.late=true;assetProgress()}},150000);
+      let glb;try{glb=embeddedToGLB(x.responseText)}catch(e){fail(k,e);return}x.onload=x.onprogress=x.onerror=null;x=null;
+      TEX_CAP=CAP[k];
+      L.parse(glb,'',g=>{glb=null;ASSETS.parts[k]=g;ASSETS.prog[k]=1;assetProgress();setTimeout(()=>next(i+1),20)},e=>fail(k,e))};
+    x.send()};
+  next(0);
+  setTimeout(()=>{if(!ASSETS.ready&&!ASSETS.failed){ASSETS.failed=true;ASSETS.late=true;assetProgress()}},240000);
 }
 const linC=h=>new THREE.Color(h).convertSRGBToLinear();
 function carMaterials(root){
@@ -3647,9 +3653,9 @@ requestAnimationFrame(frame);
 (function(){var el=document.getElementById('offNote');if(!el||!('serviceWorker' in navigator)||!window.caches)return;
   var ios=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   var home=navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||(window.matchMedia&&matchMedia('(display-mode: fullscreen)').matches);
-  navigator.serviceWorker.register('sw.js').catch(function(){});
+  (function reg(){var g=document.getElementById('go');if(g&&g.disabled){setTimeout(reg,1500);return}setTimeout(function(){navigator.serviceWorker.register('sw.js').catch(function(){})},1500)})();
   function say(t){el.textContent=t;el.hidden=false}
-  function check(n){caches.open('adf-v1').then(function(c){return c.match('assets/people.json')}).then(function(m){
+  function check(n){caches.open('adf-v2').then(function(c){return c.match('assets/people.json')}).then(function(m){
     if(m)say('✓ Saved on this phone: it plays with no internet.'+(ios&&!home?' To install: tap Share, then Add to Home Screen.':''));
     else{say('Saving the game for offline play (about 17 MB). Keep this open on Wi-Fi…');if(n<200)setTimeout(function(){check(n+1)},3000)}}).catch(function(){})}
   check(0)})();
