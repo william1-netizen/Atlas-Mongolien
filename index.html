@@ -257,6 +257,10 @@ input.num:focus-visible{outline:2px solid var(--saffron);outline-offset:1px}
 .refc ul{font-size:12px!important}
 .sch-foot{border-top:1px solid var(--line);padding-top:8px}
 @media (max-width:620px){.brief{grid-template-columns:1fr}.stats.lbs{grid-template-columns:1fr 1fr}}
+.guide{border-left-color:#7fe6cc}.guide .gh{display:flex;gap:7px;align-items:baseline;font-size:12.5px;font-weight:600}.guide .gh b{color:#7fe6cc;font-size:10px;letter-spacing:.12em;text-transform:uppercase}.guide .gh small{color:var(--ink-dim);font-weight:400;font-size:10.5px;margin-left:auto}
+.guide .gs{display:flex;flex-wrap:wrap;gap:1px 7px;font-size:10px;color:var(--ink-dim)}.guide .gs i{font-style:normal;white-space:nowrap}.guide .gs i.on{color:#7fe6cc;font-weight:600}.guide .gs i.d{opacity:.6}
+.guide ul{margin:0;padding-left:15px;font-size:11.5px;line-height:1.35;display:flex;flex-direction:column;gap:2px}.guide .gn{font-size:12px;line-height:1.35;color:#d6f7ee}.guide .gn.w{color:var(--warn)}
+.pre.slim{background:transparent!important;border-color:transparent!important;box-shadow:none!important;padding:0!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.pre.slim #preSkip{background:rgba(22,24,52,.86);color:#fdf3e4}
 .lesson .lk{display:flex;flex-wrap:wrap;gap:1px 10px;font-size:10.5px;color:var(--ink-dim)}.lesson .lk span{white-space:nowrap}.lesson .lk span.no{color:var(--warn)}
 .nav{align-self:flex-start;background:rgba(22,24,52,.42);border-radius:7px;padding:2px 7px}
 </style>
@@ -279,6 +283,7 @@ input.num:focus-visible{outline:2px solid var(--saffron);outline-offset:1px}
     <div class="row"><p id="preTxt"></p><button id="preSkip">Skip to launch</button></div>
   </div>
   <div class="lesson" id="lesson" hidden aria-live="polite"></div>
+  <div class="lesson guide" id="guide" hidden></div>
   <div class="coach" id="coach" hidden role="status"><b>Instructor</b><span id="coachT"></span></div>
   <div class="roster" id="roster" hidden></div>
   <div class="chatlog" id="chatLog" hidden></div>
@@ -331,6 +336,8 @@ input.num:focus-visible{outline:2px solid var(--saffron);outline-offset:1px}
       <div class="chips" id="roleChips"><span>You are</span><button class="chip" data-r="pilot">Pilot</button><button class="chip" data-r="chase">Chase crew</button><button class="chip" data-r="drone">Drone pilot</button></div>
       <div id="roleTip"></div>
       <div class="chips" id="envChips"><span>Envelope</span><button class="chip" data-k="atlas" aria-pressed="true">Atlas</button><button class="chip" data-k="flag" aria-pressed="false">Morocco</button><button class="chip" data-k="band" aria-pressed="false">Zellige</button><button class="chip" data-k="check" aria-pressed="false">Saffron check</button></div>
+      <div class="chips" id="sizeChips"><span>Balloon</span><button class="chip" data-s="S" aria-pressed="false">Sport · 3 passengers</button><button class="chip" data-s="M" aria-pressed="false">Mid · 8 passengers</button><button class="chip" data-s="L" aria-pressed="true">Big · 16 passengers</button></div>
+      <div class="keys" id="sizeSum"></div>
       <div class="chips" hidden><span>Friends</span><button class="chip" id="mpOpen">Fly with friends…</button><span id="mpChip"></span></div>
       <div class="chips"><span>Weather</span><button class="chip" id="wxRand" aria-pressed="true">Random morning</button><button class="chip" id="wxToday" aria-pressed="false">Today's forecast…</button></div>
       <div class="keys" id="wxSum"></div>
@@ -343,11 +350,11 @@ input.num:focus-visible{outline:2px solid var(--saffron);outline-offset:1px}
     <div class="col">
       <ul>
         <li><b>Flight school</b>: 16 lessons built from your course book, from the walk-around inspection to the check ride, plus ground-school questions, checklists, limits and a logbook.</li>
-        <li>Time runs at <b>real speed</b>, like a real flight. The time button under the wind stack fast-forwards 2× or 4×. The <b>instructor</b> gives tips as you fly, with the book section to read.</li>
-        <li>Every flight starts on the ground: lay out, <b>cold inflation</b> with the fan, <b>hot inflation</b> (hold BURN to stand the balloon up), then 16 passengers board around the pilot.</li>
+        <li>Time runs at <b>real speed</b>, like a real flight. The time button under the wind stack fast-forwards 2× or 4×. The <b>instructor</b> walks you through every phase, from layout to pack-up, with the book section to read.</li>
+        <li>Every flight starts on the ground: lay out, <b>cold inflation</b> with the fan, <b>hot inflation</b> (hold BURN to stand the balloon up), then the passengers board: 3, 8 or 16 depending on the <b>balloon</b> you pick.</li>
         <li>Hold <b>BURN</b> to heat the envelope and climb, <b>VENT</b> to sink. The balloon answers slowly: burn early, stop early.</li>
         <li>You can't steer. The colored streaks are the air: <b>mint</b> low, <b>pink</b> middle, <b>gold</b> high, bright end pointing where it goes. Pick your height to pick your direction.</li>
-        <li>BURN fires two of the four burners; hold it over 2 s and all four fire for a strong climb. <b>VENT</b> opens the parachute: tap it, never hold more than 3 s. Stay under 800 ft/min up or down and 120 °C in the envelope. Tap <b>Propane</b> to switch between the 4 cylinders.</li>
+        <li>BURN fires half the burners (two of four, one of two in the Sport); hold it over 2 s and they all fire for a strong climb. <b>VENT</b> opens the parachute: tap it, never hold more than 3 s. Stay under the climb and descent limit (1,000 ft/min, or 800 ft/min in the big balloon) and 120 °C in the envelope. Tap <b>Propane</b> to switch cylinders.</li>
         <li>To land: call <b>LANDING POSITION</b>, turn the <b>pilot lights off</b>, touch down under 400 ft/min with the basket's long side forward (use the turning vents ⟲ ⟳), then pull the <b>RED LINE</b> on the ground.</li>
         <li>The control lines hang into the basket like on the real thing: <b>red/white</b> = parachute (VENT), <b>black</b> = rotate left, <b>green</b> = rotate right, <b>red</b> = rapid deflation, ground only. The white crown line is for the crown crew during inflation.</li>
         <li>Every time a balloon lands, <b>Chakib</b> and his brother <b>Zaml</b> drive out from their café in their old blue Fiat Uno with coffee for everyone. The black Fortuner chase car and the drone pilot's Logan go to the landing too.</li>
@@ -919,6 +926,21 @@ function makeScooter(){
 /* ================= balloon model ================= */
 const DESIGNS={atlas:{dot:'#f2a33a'},flag:{dot:'#c4253a'},band:{dot:'#b8323f'},check:{dot:'#f0c22c'},blue:{dot:'#2f49c9'}};
 let PLAYER_ENV='atlas';try{PLAYER_ENV=localStorage.getItem('adf-env')||'atlas'}catch(_){}
+/* Balloon sizes. Heat loss and drag scale with envelope area (V^2/3), the picture with V^1/3.
+   Climb/descent limit: 1,000 ft/min, or 800 ft/min from 340,000 cu ft (3.5.2, 3.5.10). */
+const BSPEC={
+ S:{id:'S',name:'Sport',cu:'90,000',V:2550,pax:3,mf:245,tk:30,nt:3,bw:2.6e6,n1:1,n2:2,rate:1000,burner:'double burner',bwid:1.7,bd:1.3,camZ:-.42,fr:[.42,.42],tz:-.6,fl:[[-.2,0],[.2,0]],
+    seats:[[0,-.36,0,0],[-.55,.3,0,1],[-.05,.32,0,1],[.4,.3,0,1]]},
+ M:{id:'M',name:'Mid',cu:'210,000',V:5950,pax:8,mf:640,tk:40,nt:4,bw:2.25e6,n1:2,n2:4,rate:1000,burner:'quad burner',bwid:3.64,bd:1.96,camZ:-.8,fr:[.385,.51],tz:-.83,sc:[.7,1,.85],
+    fl:[[-.196,.255],[.196,.255],[-.196,-.255],[.196,-.255]],seats:null},
+ L:{id:'L',name:'Big',cu:'425,000',V:12034,pax:16,mf:960,tk:40,nt:4,bw:3.6e6,n1:2,n2:4,rate:800,burner:'quad burner',bwid:5.2,bd:2.3,camZ:-.95,fr:[.55,.6],tz:-.98,
+    fl:[[-.28,.3],[.28,.3],[-.28,-.3],[.28,-.3]],seats:null}};
+{const M=[[0,-.12,0]];for(const s of[-1,1])for(const zf of[-1,1]){const yaw=zf>0?0:Math.PI;M.push([s*.85,zf*.68,yaw,1],[s*1.39,zf*.68,yaw,1])}BSPEC.M.seats=M}
+for(const k in BSPEC){const s=BSPEC[k],a=Math.pow(s.V/12034,2/3);s.lk=16500*a;s.dk=.5*.8*572*a;s.k=Math.cbrt(s.V/12034)}
+let BSIZE='L';try{const v=localStorage.getItem('adf-size');if(BSPEC[v])BSIZE=v}catch(_){}
+let BSK=BSPEC.L;
+const flightSpec=()=>(typeof SCHOOL!=='undefined'&&(SCHOOL.cur||SCHOOL.preset))?BSPEC.L:(BSPEC[BSIZE]||BSPEC.L);
+const fMax=b=>b.S.nt*b.S.tk;
 const texCache={};
 function envTexture(kind){
   if(texCache[kind])return texCache[kind];
@@ -931,10 +953,13 @@ function envTexture(kind){
     g.save();g.beginPath();g.rect(0,Y(.55),W,Y(.44)-Y(.55));g.clip();const s=W/32;for(let x=0;x<W;x+=s)for(let y=Y(.55);y<Y(.44);y+=s){g.fillStyle='rgba(240,190,180,.35)';g.beginPath();g.moveTo(x+s/2,y);g.lineTo(x+s,y+s/2);g.lineTo(x+s/2,y+s);g.lineTo(x,y+s/2);g.fill();g.fillStyle='rgba(46,122,74,.65)';g.fillRect(x+s/2-3,y+s/2-3,6,6)}g.restore()}
   else if(kind==='check'){band(0,1,'#f0c22c');const s=W/48;for(let row=0;row<12;row++){const v=.1+row*.022;for(let i=0;i<48;i++){if(((i+row)%6)<2){g.fillStyle=(i+row)%2?'#5a7a38':'#2e3524';g.fillRect(i*s,Y(v+.022),s+1,Y(v)-Y(v+.022)+1)}}}}
   else{band(0,1,'#2f49c9');band(.36,.4,'#f2c230');band(.6,.64,'#f2c230');band(0,.1,'#c4623f')}
-  g.strokeStyle='rgba(0,0,0,.2)';g.lineWidth=2;for(let i=0;i<=24;i++){g.beginPath();g.moveTo(i*W/24,0);g.lineTo(i*W/24,Hh);g.stroke()}
+  for(let i=0;i<24;i++){const x0=i*W/24,gw=W/24,gr=g.createLinearGradient(x0,0,x0+gw,0);gr.addColorStop(0,'rgba(0,0,0,.16)');gr.addColorStop(.18,'rgba(0,0,0,.03)');gr.addColorStop(.5,'rgba(255,255,255,.05)');gr.addColorStop(.82,'rgba(0,0,0,.03)');gr.addColorStop(1,'rgba(0,0,0,.16)');g.fillStyle=gr;g.fillRect(x0,0,gw,Hh)}
+  g.globalAlpha=.06;for(let k=0;k<2600;k++){g.fillStyle=Math.random()<.5?'#000':'#fff';g.fillRect(Math.random()*W,Math.random()*Hh,2+Math.random()*3,1)}g.globalAlpha=1;
+  g.strokeStyle='rgba(30,22,16,.34)';g.lineWidth=3;for(let i=0;i<=24;i++){g.beginPath();g.moveTo(i*W/24,0);g.lineTo(i*W/24,Hh);g.stroke()}
+  g.strokeStyle='rgba(255,250,240,.16)';g.lineWidth=1;for(let i=0;i<=24;i++){g.beginPath();g.moveTo(i*W/24+2,0);g.lineTo(i*W/24+2,Hh);g.stroke()}
   g.strokeStyle='rgba(0,0,0,.12)';for(let j=1;j<18;j++){g.beginPath();g.moveTo(0,Y(j/18));g.lineTo(W,Y(j/18));g.stroke()}
   band(0,.035,'#3a2c24');
-  const tx=new THREE.CanvasTexture(c);tx.encoding=THREE.sRGBEncoding;tx.anisotropy=4;texCache[kind]=tx;return tx;
+  const tx=new THREE.CanvasTexture(c);tx.encoding=THREE.sRGBEncoding;tx.anisotropy=8;texCache[kind]=tx;return tx;
 }
 let wickerMat=null;
 function wicker(){
@@ -970,6 +995,13 @@ function personGeos(){
 }
 const PERSON={legs:null};
 const ENV_PTS=[[2.1,0],[3.6,2.6],[6.2,6.8],[8.2,11.5],[9,15.5],[8.7,19.2],[7.4,22.3],[5,24.7],[2.2,25.8],[.01,26.1]],ESC=1.25,ENV_H=26.1*ESC;
+let ENV_GEO=null;
+function envGeometry(){if(ENV_GEO)return ENV_GEO;
+  const src=ENV_PTS.slice(0,-1).map(p=>new THREE.Vector2(p[0]*ESC,p[1]*ESC)),pts=new THREE.SplineCurve(src).getPoints(40);
+  const G=24,seg=G*4,geo=new THREE.LatheGeometry(pts,seg),P=geo.attributes.position,top=pts[pts.length-1].y;
+  for(let i=0;i<P.count;i++){const x=P.getX(i),y=P.getY(i),z=P.getZ(i);let ph=Math.atan2(x,z);if(ph<0)ph+=Math.PI*2;
+    const f=ph*G/(Math.PI*2),b=Math.sin(Math.PI*(f-Math.floor(f))),w=Math.sin(Math.PI*clamp(y/top,0,1))*.9+.1,k=1+.022*b*w;P.setX(i,x*k);P.setZ(i,z*k)}
+  geo.computeVertexNormals();return ENV_GEO=geo}
 function makeBalloon(kind,mine){
   const grp=new THREE.Group(),basketG=new THREE.Group();grp.add(basketG);
   if(ASSETS.ready)return makeBalloon3D(kind,mine,grp,basketG);
@@ -1031,10 +1063,10 @@ function makeBalloon(kind,mine){
 }
 function envelopeParts(grp,basketG,kind,fy,flames,people,seats){
   // envelope on its own pivot at the mouth, so it can lie on the ground and stand up
-  const envPivot=new THREE.Group();envPivot.position.y=3.6;grp.add(envPivot);
+  const envPivot=new THREE.Group();envPivot.position.y=3.6;envPivot.scale.setScalar(BSK.k);grp.add(envPivot);
   const tex=envTexture(kind);
   const emat=new THREE.MeshLambertMaterial({map:tex,emissiveMap:tex,emissive:0x000000,side:THREE.DoubleSide});
-  const env=new THREE.Mesh(new THREE.LatheGeometry(ENV_PTS.slice(0,-1).map(p=>new THREE.Vector2(p[0]*ESC,p[1]*ESC)),48),emat);env.castShadow=true;envPivot.add(env);
+  const env=new THREE.Mesh(envGeometry(),emat);env.castShadow=true;envPivot.add(env);
   // the parachute seals the crown opening; the red/white line pulls it down to vent hot air
   const chute=new THREE.Mesh(new THREE.LatheGeometry([[.01,26.05],[1.5,25.98],[2.6,25.72],[3.05,25.42]].map(p=>new THREE.Vector2(p[0]*ESC,p[1]*ESC)),32),emat);chute.castShadow=true;env.add(chute);
   // rotation vents on the equator: black line opens the left one, green the right one
@@ -1042,38 +1074,93 @@ function envelopeParts(grp,basketG,kind,fy,flames,people,seats){
   const slitL=new THREE.Mesh(new THREE.PlaneGeometry(.8,3.4),slitM);slitL.position.set(9*ESC+.06,15.5*ESC,0);slitL.rotation.y=Math.PI/2;slitL.visible=false;env.add(slitL);
   const slitR=slitL.clone();slitR.position.x=-slitL.position.x;slitR.rotation.y=-Math.PI/2;slitR.visible=false;env.add(slitR);
   const skirt=new THREE.Mesh(new THREE.CylinderGeometry(2.62,2.85,.8,24,1,true),new THREE.MeshLambertMaterial({color:lin(0x3a2c24),side:THREE.DoubleSide}));skirt.position.y=-.3;envPivot.add(skirt);
-  const lg=new THREE.BufferGeometry(),lp=[];for(let k=0;k<8;k++){const a=k/8*Math.PI*2;lp.push(Math.cos(a)*.55,fy,Math.sin(a)*.6,Math.cos(a)*2.6,3.6,Math.sin(a)*2.6)}
+  const lg=new THREE.BufferGeometry(),lp=[];for(let k=0;k<8;k++){const a=k/8*Math.PI*2;lp.push(Math.cos(a)*BSK.fr[0],fy,Math.sin(a)*BSK.fr[1],Math.cos(a)*2.6*BSK.k,3.6,Math.sin(a)*2.6*BSK.k)}
   lg.setAttribute('position',new THREE.Float32BufferAttribute(lp,3));const cables=new THREE.LineSegments(lg,new THREE.LineBasicMaterial({color:lin(0x2a2a2a)}));grp.add(cables);
-  const ropes=new THREE.Group(),yTop=3.6+25.9*ESC,tie=(x)=>new THREE.Vector3(x,1.3,-.98);
+  const ropes=new THREE.Group(),EK=ESC*BSK.k,yTop=3.6+25.9*EK,tie=(x)=>new THREE.Vector3(x,1.3,BSK.tz);
   const line=(pts,col,dash)=>{const geo=new THREE.BufferGeometry().setFromPoints(pts);const l=new THREE.Line(geo,dash?new THREE.LineDashedMaterial({color:col,dashSize:.45,gapSize:.45}):new THREE.LineBasicMaterial({color:col}));if(dash)l.computeLineDistances();ropes.add(l);return l};
   const chutePts=[new THREE.Vector3(0,yTop-.4,0),new THREE.Vector3(.1,4.2,-.1),tie(.15)];line(chutePts,0xfdf3e4);line(chutePts,0xd42b2b,true);
   line([new THREE.Vector3(.4,yTop-.5,.2),new THREE.Vector3(.22,4.2,-.12),tie(.3)],0xc81e1e);
-  line([new THREE.Vector3(9*ESC-.3,3.6+15.5*ESC,0),new THREE.Vector3(.5,4.0,-.2),tie(.48)],0x0b0b0b);
-  line([new THREE.Vector3(-9*ESC+.3,3.6+15.5*ESC,0),new THREE.Vector3(-.5,4.0,-.2),tie(-.48)],0x1fa34a);
-  const crownPts=[];ENV_PTS.slice().reverse().forEach(([px,py])=>{if(py>14)crownPts.push(new THREE.Vector3(0,3.6+py*ESC+.08,px*ESC+.12))});crownPts.push(new THREE.Vector3(0,1.4,1.18));line(crownPts,0xe8e0cc);
+  line([new THREE.Vector3(9*EK-.3,3.6+15.5*EK,0),new THREE.Vector3(.5,4.0,-.2),tie(.48)],0x0b0b0b);
+  line([new THREE.Vector3(-9*EK+.3,3.6+15.5*EK,0),new THREE.Vector3(-.5,4.0,-.2),tie(-.48)],0x1fa34a);
+  const crownPts=[];ENV_PTS.slice().reverse().forEach(([px,py])=>{if(py>14)crownPts.push(new THREE.Vector3(0,3.6+py*EK+.08,px*EK+.12))});crownPts.push(new THREE.Vector3(0,1.4,BSK.bd/2+.03));line(crownPts,0xe8e0cc);
   grp.add(ropes);
-  grp.userData={emat,flames,glow:0,basketG,envPivot,env,people,seats,cables,ropes,chute,chuteY:0,slitL,slitR,vo:0,crouch:-1,boarded:-1,crouchNow:0,hidePilot:false};
-  setPose(grp,1,1,0,16);setCrouch(grp,0);
+  grp.userData={emat,flames,glow:0,basketG,envPivot,env,people,seats,cables,ropes,chute,chuteY:0,slitL,slitR,vo:0,crouch:-1,boarded:-1,crouchNow:0,hidePilot:false,k:BSK.k,spec:BSK};
+  setPose(grp,1,1,0,BSK.pax);setCrouch(grp,0);
   return grp;
 }
+/* ---------------- sport basket (pilot + 3), built from the big basket's own materials ---------------- */
+let BMATS=null;
+function basketMats(){if(BMATS)return BMATS;const M={};
+  if(ASSETS.basket)ASSETS.basket.traverse(o=>{if(o.isMesh)(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{if(m&&m.name&&!M[m.name]){const c=m.clone();c.vertexColors=false;M[m.name]=c}})});
+  const L=c=>new THREE.MeshLambertMaterial({color:lin(c)});
+  const d={bal_wicker:wicker(),bal_wood:L(0x4a3018),bal_suede:L(0x6b4a2e),bal_leather:L(0x2c1a10),bal_dark:L(0x151515),bal_jacket:L(0x1c2640),bal_steel:L(0xc0c4c8),bal_coil:L(0x9a8a7a),bal_red:L(0xa01810),bal_screen:new THREE.MeshBasicMaterial({color:0x9fe0a8,toneMapped:false}),bal_rope:L(0x8c8070)};
+  for(const k in d)if(!M[k])M[k]=d[k];return BMATS=M}
+// box whose faces repeat the wicker every T metres, whatever transform the texture carries
+function tiledBox(w,h,d,T,map){const geo=new THREE.BoxGeometry(w,h,d),uv=geo.attributes.uv,dims=[[d,h],[d,h],[w,d],[w,d],[w,h],[w,h]];
+  const rx=map&&map.repeat?map.repeat.x:1,ry=map&&map.repeat?map.repeat.y:1,ox=map&&map.offset?map.offset.x:0,oy=map&&map.offset?map.offset.y:0;
+  for(let f=0;f<6;f++)for(let j=0;j<4;j++){const i=f*4+j,u=uv.getX(i)*dims[f][0]/T,v=uv.getY(i)*dims[f][1]/T;uv.setXY(i,(u-ox)/rx,(v-oy)/ry)}
+  uv.needsUpdate=true;return geo}
+function smallBasket(basketG){
+  const M=basketMats(),S=BSPEC.S,BW=S.bwid,BD=S.bd,BH=1.12,t=.06,fy=FZB;
+  const add=(geo,mat,x,y,z,sh)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=!!sh;m.receiveShadow=true;basketG.add(m);return m};
+  const wk=M.bal_wicker,T=.027;
+  // floor on two skids, four woven walls with a slight taper, padded leather rim
+  add(new THREE.BoxGeometry(BW-.04,.05,BD-.04),M.bal_wood,0,.045,0);
+  for(const z of[-.38,.38])add(new THREE.BoxGeometry(BW,.07,.09),M.bal_wood,0,.0,z,true);
+  add(tiledBox(BW,BH,t,T,wk.map),wk,0,BH/2,BD/2-t/2,true);add(tiledBox(BW,BH,t,T,wk.map),wk,0,BH/2,-BD/2+t/2,true);
+  add(tiledBox(t,BH,BD,T,wk.map),wk,BW/2-t/2,BH/2,0,true);add(tiledBox(t,BH,BD,T,wk.map),wk,-BW/2+t/2,BH/2,0,true);
+  for(const x of[-1,1])for(const z of[-1,1])add(new THREE.CylinderGeometry(.05,.05,BH,8),M.bal_leather,x*(BW/2-.03),BH/2,z*(BD/2-.03));
+  const rim=M.bal_leather;add(new THREE.BoxGeometry(BW+.08,.12,.15),rim,0,BH+.03,BD/2);add(new THREE.BoxGeometry(BW+.08,.12,.15),rim,0,BH+.03,-BD/2);
+  add(new THREE.BoxGeometry(.15,.12,BD),rim,BW/2,BH+.03,0);add(new THREE.BoxGeometry(.15,.12,BD),rim,-BW/2,BH+.03,0);
+  // three cylinders in insulated jackets with valves and gauges, strapped in the corners
+  const tanks=[[-.6,-.43],[.6,-.43],[.68,-.04]],tg=new THREE.CylinderGeometry(.19,.19,1.12,16);
+  tanks.forEach(([x,z])=>{add(tg,M.bal_jacket,x,.62,z,true);add(new THREE.SphereGeometry(.19,16,8,0,Math.PI*2,0,Math.PI/2),M.bal_steel,x,1.18,z);
+    add(new THREE.CylinderGeometry(.035,.035,.14,8),M.bal_steel,x,1.4,z);const gg=add(new THREE.CylinderGeometry(.05,.05,.02,12),M.bal_white||M.bal_steel,x+.13,1.28,z);gg.rotation.z=Math.PI/2;
+    for(const y of[.35,.95]){const st=add(new THREE.TorusGeometry(.198,.014,5,20),M.bal_dark,x,y,z);st.rotation.x=Math.PI/2}});
+  // flexi poles in suede covers up to the burner frame
+  for(const x of[-1,1])for(const z of[-1,1]){const p=new THREE.Vector3(x*(BW/2-.06),BH,z*(BD/2-.06)),q=new THREE.Vector3(x*S.fr[0],fy,z*S.fr[1]),len=p.distanceTo(q);
+    const pole=add(new THREE.CylinderGeometry(.045,.045,len,8),M.bal_suede,(p.x+q.x)/2,(p.y+q.y)/2,(p.z+q.z)/2);pole.lookAt(q);pole.rotateX(Math.PI/2)}
+  // burner frame and double burner: coils, cans, blast valves, pilot lights
+  for(const z of[-S.fr[1],S.fr[1]])add(new THREE.BoxGeometry(S.fr[0]*2+.06,.05,.05),M.bal_steel,0,fy,z);
+  for(const x of[-S.fr[0],S.fr[0]])add(new THREE.BoxGeometry(.05,.05,S.fr[1]*2+.06),M.bal_steel,x,fy,0);
+  add(new THREE.BoxGeometry(.62,.1,.28),M.bal_steel,0,fy+.02,0);
+  for(const z of[-S.fr[1],S.fr[1]])add(new THREE.BoxGeometry(.06,.06,.06),M.bal_steel,0,fy,z*.5);
+  add(new THREE.BoxGeometry(.05,.05,S.fr[1]*2),M.bal_steel,0,fy,0);
+  const can=M.bal_steel;
+  S.fl.forEach(([x,z])=>{add(new THREE.CylinderGeometry(.19,.2,.34,18,1,true),can,x,fy+.24,z,true);
+    for(let k=0;k<4;k++){const c=add(new THREE.TorusGeometry(.14,.022,6,18),M.bal_coil,x,fy+.12+k*.08,z);c.rotation.x=Math.PI/2}
+    add(new THREE.CylinderGeometry(.03,.03,.1,8),M.bal_dark,x,fy+.43,z);
+    const lev=add(new THREE.BoxGeometry(.04,.04,.3),M.bal_dark,x,fy-.12,z-.22);lev.rotation.x=-.5;
+    add(new THREE.BoxGeometry(.06,.08,.06),M.bal_red,x+Math.sign(x)*.2,fy-.04,z)});
+  // hoses from each cylinder to the burner
+  const hm=M.bal_dark;tanks.forEach(([x,z],i)=>{const bx=S.fl[i%2][0];const c=new THREE.QuadraticBezierCurve3(new THREE.Vector3(x,1.42,z),new THREE.Vector3(x*.9,2.1,z*.7),new THREE.Vector3(bx,fy-.06,0));
+    basketG.add(new THREE.Mesh(new THREE.TubeGeometry(c,14,.022,6),hm))});
+  // instruments on the rim beside the pilot, extinguisher, rope handles inside the walls
+  const ins=add(new THREE.BoxGeometry(.22,.15,.06),M.bal_dark,-.3,BH+.14,-BD/2+.02);
+  const scr=add(new THREE.PlaneGeometry(.16,.09),M.bal_screen,-.3,BH+.15,-BD/2+.055);
+  add(new THREE.CylinderGeometry(.06,.06,.38,10),M.bal_red,-.68,.28,-.47);
+  const hs=[];for(const x of[-.55,-.05,.4])hs.push({g:new THREE.TorusGeometry(.06,.012,5,10,Math.PI),m:new THREE.Matrix4().makeRotationX(-Math.PI/2).setPosition(x,.98,BD/2-.07),c:lin(0x2a1c12)});
+  for(const z of[-.25,.25])hs.push({g:new THREE.TorusGeometry(.06,.012,5,10,Math.PI),m:new THREE.Matrix4().makeRotationY(Math.PI/2).multiply(new THREE.Matrix4().makeRotationX(-Math.PI/2)).setPosition(-BW/2+.07,.98,z),c:lin(0x2a1c12)});
+  basketG.add(new THREE.Mesh(mergeParts(hs),new THREE.MeshLambertMaterial({vertexColors:true})));
+}
 function makeBalloon3D(kind,mine,grp,basketG){
-  basketG.add(ASSETS.basket.clone(true));
+  if(BSK.id==='S')smallBasket(basketG);else{const bk=ASSETS.basket.clone(true);if(BSK.sc)bk.scale.set(BSK.sc[0],BSK.sc[1],BSK.sc[2]);basketG.add(bk)}
   const fy=FZB,fg=new THREE.ConeGeometry(.42,3,10);fg.translate(0,1.5,0);
   const fmat=new THREE.MeshBasicMaterial({color:0xffb347,transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false,fog:false,toneMapped:false});
-  const flames=[[-.28,.3],[.28,.3],[-.28,-.3],[.28,-.3]].map(([x,z])=>{const f=new THREE.Mesh(fg,fmat);f.position.set(x,fy+.34,z);f.visible=false;basketG.add(f);return f});
+  const flames=BSK.fl.map(([x,z])=>{const f=new THREE.Mesh(fg,fmat);f.position.set(x,fy+.34,z);f.visible=false;basketG.add(f);return f});
   let people=[],seats=[[0,-.32,0]];
   let persons=null;if(mine){persons=basketPeople(grp,basketG,true)}
-  else{const PG=personGeos();for(const s of[-1,1])for(const zf of[-1,1])for(let k=0;k<4;k++)seats.push([s*(1.25+(k%2)*.82),zf*(k<2?.78:.36),zf>0?0:Math.PI]);
-    const mk=g=>{const im=new THREE.InstancedMesh(g,new THREE.MeshLambertMaterial({vertexColors:true}),17);im.castShadow=true;basketG.add(im);return im};
+  else{const PG=personGeos();if(BSK.seats)BSK.seats.slice(1).forEach(q=>seats.push([q[0],q[1],q[2]]));else for(const s of[-1,1])for(const zf of[-1,1])for(let k=0;k<4;k++)seats.push([s*(1.25+(k%2)*.82),zf*(k<2?.78:.36),zf>0?0:Math.PI]);
+    const NS=seats.length,mk=g=>{const im=new THREE.InstancedMesh(g,new THREE.MeshLambertMaterial({vertexColors:true}),NS);im.castShadow=true;basketG.add(im);return im};
     people=[mk(PG.clothes),mk(PG.skin),mk(PG.hair),mk(PG.face)];const rnd=a=>a[Math.floor(Math.random()*a.length)];
-    for(let i=0;i<17;i++){const sk=rnd(SKIN);people[0].setColorAt(i,lin(rnd(CLOTHES)));people[1].setColorAt(i,lin3(sk[0],sk[1],sk[2]));people[2].setColorAt(i,lin(rnd(HAIR)));people[3].setColorAt(i,lin(0x1a1210))}}
+    for(let i=0;i<NS;i++){const sk=rnd(SKIN);people[0].setColorAt(i,lin(rnd(CLOTHES)));people[1].setColorAt(i,lin3(sk[0],sk[1],sk[2]));people[2].setColorAt(i,lin(rnd(HAIR)));people[3].setColorAt(i,lin(0x1a1210))}}
   const g=envelopeParts(grp,basketG,kind,fy,flames,people,seats);if(persons){g.userData.persons=persons;persons.forEach((P,i)=>P.root.visible=i<=g.userData.boarded)}return g;
 }
 function setPose(grp,cold,stand,tip,boarded){
   const u=grp.userData;
   u.envPivot.rotation.x=(Math.PI/2)*(1-stand);
   const r=stand>0?lerp(.8,1,stand):lerp(.1,.8,cold);u.env.scale.set(r,stand>0?1:lerp(.85,1,cold),r);
-  u.envPivot.position.set(0,lerp(Math.max(1.5,9.5*r),3.6,stand),lerp(4.5,0,stand));
+  const ek=u.k||1;u.envPivot.position.set(0,lerp(Math.max(1.5,9.5*r)*ek,3.6,stand),lerp(4.5*ek,0,stand));
   u.basketG.rotation.x=(Math.PI/2)*tip;u.basketG.position.y=1.15*tip;
   u.cables.visible=stand>=.999&&tip<=.001;if(u.ropes)u.ropes.visible=u.cables.visible;
   if(boarded!==u.boarded){u.boarded=boarded;u.people.forEach(m=>m.count=1+boarded);if(u.persons)u.persons.forEach((P,i)=>P.root.visible=i<=boarded)}
@@ -1139,14 +1226,21 @@ function updateAir(dt){
 let WX={mode:'random',sfc:{from:90,kmh:6},w1:{from:140,kmh:12},w2:{from:230,kmh:20},gust:0,temp:12,cloud:'few',haze:'haze'};
 try{const s=JSON.parse(localStorage.getItem('adf-wx')||'null');if(s&&s.sfc)WX=Object.assign(WX,s)}catch(_){}
 const cloudG=new THREE.Group();scene.add(cloudG);
-const cloudTex=(()=>{const c=document.createElement('canvas');c.width=256;c.height=128;const g=c.getContext('2d');for(let i=0;i<26;i++){const x=40+Math.random()*176,y=50+Math.random()*40,r=18+Math.random()*34,gr=g.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,'rgba(255,255,255,.55)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(0,0,256,128)}const tx=new THREE.CanvasTexture(c);tx.encoding=THREE.sRGBEncoding;return tx})();
+const cloudTexs=[0,1,2,3].map(()=>{const W=512,Hc=256,c=document.createElement('canvas');c.width=W;c.height=Hc;const g=c.getContext('2d');const base=Hc*.78;
+  const puffs=[];const n=16+Math.floor(Math.random()*10);for(let i=0;i<n;i++){const t=Math.random(),x=W*(.14+.72*t),hump=Math.sin(Math.PI*t),r=26+Math.random()*44*(.5+hump);puffs.push([x,base-r*.55-hump*Hc*.28*Math.random(),r])}
+  puffs.sort((p,q)=>q[1]-p[1]);
+  for(const[x,y,r]of puffs){const gr=g.createRadialGradient(x-r*.25,y-r*.35,r*.1,x,y,r);gr.addColorStop(0,'rgba(255,255,255,.95)');gr.addColorStop(.55,'rgba(246,246,248,.85)');gr.addColorStop(.85,'rgba(214,218,228,.45)');gr.addColorStop(1,'rgba(214,218,228,0)');g.fillStyle=gr;g.beginPath();g.arc(x,y,r,0,7);g.fill()}
+  g.globalCompositeOperation='source-atop';const sh=g.createLinearGradient(0,base-Hc*.45,0,base);sh.addColorStop(0,'rgba(120,130,150,0)');sh.addColorStop(1,'rgba(118,126,146,.55)');g.fillStyle=sh;g.fillRect(0,0,W,Hc);
+  g.globalCompositeOperation='destination-out';const cut=g.createLinearGradient(0,base-6,0,base+10);cut.addColorStop(0,'rgba(0,0,0,0)');cut.addColorStop(1,'rgba(0,0,0,1)');g.fillStyle=cut;g.fillRect(0,base-6,W,Hc);
+  g.globalCompositeOperation='source-over';const tx=new THREE.CanvasTexture(c);tx.encoding=THREE.sRGBEncoding;return tx});
+const cloudTex=cloudTexs[0];
 function applyWeather(){
   T_GROUND=WX.mode==='today'?+WX.temp:10+Math.random()*6;
   while(cloudG.children.length)cloudG.remove(cloudG.children[0]);
   const cover=WX.mode==='today'?WX.cloud:['clear','few','few','broken'][Math.floor(Math.random()*4)];
   const n={clear:0,few:14,broken:45,overcast:110}[cover]||0;
-  for(let i=0;i<n;i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:cloudTex,transparent:true,depthWrite:false,fog:true,opacity:cover==='overcast'?.9:.75}));
-    const a=Math.random()*Math.PI*2,d=2000+Math.random()*26000,w=1800+Math.random()*3200;s.position.set(Math.cos(a)*d,1800+Math.random()*1400,Math.sin(a)*d);s.scale.set(w,w*.42,1);cloudG.add(s)}
+  for(let i=0;i<n;i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:cloudTexs[i%4],transparent:true,depthWrite:false,fog:true,opacity:cover==='overcast'?.92:.9}));
+    const a=Math.random()*Math.PI*2,d=2000+Math.random()*26000,w=1800+Math.random()*3200;s.position.set(Math.cos(a)*d,1800+Math.random()*1400,Math.sin(a)*d);s.scale.set(w,w*.5,1);cloudG.add(s)}
   const hz=WX.mode==='today'?WX.haze:'haze';scene.fog.density={clear:.000011,haze:.0000175,mist:.000045}[hz]||.0000175;
   hemi.userData.dim=cover==='overcast'?.7:cover==='broken'?.88:1;
 }
@@ -1225,8 +1319,8 @@ function mpPush(force){
   if(!MP.on||!MP.room)return;const pr={n:MP.name,k:PLAYER_ENV,ro:ROLE};
   if(F&&F.def&&F.phase!=='intro'){const me=F.me,P=F.pre,r1=v=>Math.round(v*10)/10;
     pr.fid=F.def.id;pr.fl=F.def;pr.ph=F.phase==='done'?'done':F.phase;
-    pr.p=[r1(me.x),r1(me.y),r1(me.z),Math.round(me.rot*100)/100];pr.br=!!me.burning;pr.lp=!!F.lp;
-    pr.st=F.phase==='pre'?[r1(P.cold),Math.round(P.stand*100)/100,Math.round(P.tip*100)/100,P.boarded|0]:[1,me.rip?Math.max(0,1-(F.deflate||0)/2.2):1,0,16];
+    pr.p=[r1(me.x),r1(me.y),r1(me.z),Math.round(me.rot*100)/100];pr.br=!!me.burning;pr.sz=me.S.id;pr.lp=!!F.lp;
+    pr.st=F.phase==='pre'?[r1(P.cold),Math.round(P.stand*100)/100,Math.round(P.tip*100)/100,P.boarded|0]:[1,me.rip?Math.max(0,1-(F.deflate||0)/2.2):1,0,me.pax];
     pr.res=MP.res||null;
     if(F.hideMe)pr.p=null;
     pr.vh=F.pv?[r1(F.pv.x),r1(F.pv.z),Math.round(F.pv.h*100)/100,F.pv.kind==='fortuner'?'fortuner':'logan']:null;
@@ -1256,10 +1350,10 @@ function mpSync(dt){
     if(!Array.isArray(pr.p)||pr.p.length<4)continue;
     const x=fin(pr.p[0],-30000,30000),y=fin(pr.p[1],-50,9000),z=fin(pr.p[2],-30000,30000),ro=fin(pr.p[3],-1e4,1e4);if([x,y,z,ro].includes(null))continue;
     seen.add(p.peer);
-    const kind=DESIGNS[pr.k]?pr.k:'atlas',name=cleanName(pr.n);let R=MP.remote.get(p.peer);
-    if(R&&R.kind!==kind){mpDrop(p.peer);R=null}
-    if(!R){const g=makeBalloon(kind);scene.add(g);R={g,kind,name:'',lb:null,x,y,z,rot:ro,shadow:makeShadow(),glow:0};MP.remote.set(p.peer,R)}
-    if(R.name!==name){if(R.lb)R.g.remove(R.lb);R.lb=makeLabel(name);R.lb.position.y=3.6+ENV_H+6;R.g.add(R.lb);R.name=name}
+    const kind=DESIGNS[pr.k]?pr.k:'atlas',name=cleanName(pr.n),bsz=BSPEC[pr.sz]?pr.sz:'L';let R=MP.remote.get(p.peer);
+    if(R&&(R.kind!==kind||R.bsz!==bsz)){mpDrop(p.peer);R=null}
+    if(!R){BSK=BSPEC[bsz];const g=makeBalloon(kind);BSK=BSPEC.L;scene.add(g);R={g,kind,bsz,name:'',lb:null,x,y,z,rot:ro,shadow:makeShadow(),glow:0};MP.remote.set(p.peer,R)}
+    if(R.name!==name){if(R.lb)R.g.remove(R.lb);R.lb=makeLabel(name);R.lb.position.y=3.6+ENV_H*BSPEC[R.bsz||'L'].k+6;R.g.add(R.lb);R.name=name}
     const k=Math.min(1,dt*6),ox=R.x,oz=R.z;R.x=lerp(R.x,x,k);R.y=lerp(R.y,y,k);R.z=lerp(R.z,z,k);if(dt>0){const sd0=dt*TS||1;R.vx=lerp(R.vx||0,(R.x-ox)/sd0,.1);R.vz=lerp(R.vz||0,(R.z-oz)/sd0,.1)}let dr=ro-R.rot;dr=Math.atan2(Math.sin(dr),Math.cos(dr));R.rot+=dr*k;
     R.ph=pr.ph;R.res=pr.res;R.kindName=kind;R.role=pr.ro;
     if((R.ph==='ground'||R.ph==='done')&&!R.landReg&&F.landings){R.landReg=true;addLanding(R,'friend',name)}if(R.ph==='fly'||R.ph==='pre')R.landReg=false;
@@ -1829,10 +1923,10 @@ for(const s of[-1,1])for(const zf of[-1,1]){const yaw=zf>0?0:Math.PI;SEATS3D.pus
 const PAX_IDS=['pax_m1','pax_f1','pax_m2','pax_f2','pax_m3','pax_f3','pax_m4','pax_f4','pax_f5'];
 const TOP_TINTS=[0x22345a,0x6a1f2a,0x3a3d42,0x2e4a3c,0xb08a2a,0xc48aa0,0x1c2230,0x5a6068,0x8a3b1c,0x264e6e,0x4a4a36,0xd8d2c4,0x7a2e5a,0x2a2a2a];
 function basketPeople(grp,basketG,mine){
-  const list=[];
+  const list=[],SE=BSK.seats||SEATS3D;
   const rnd=rng((Math.random()*1e9)|0);
-  for(let i=0;i<SEATS3D.length;i++){
-    const [x,z,yaw,front]=SEATS3D[i];
+  for(let i=0;i<SE.length;i++){
+    const [x,z,yaw,front]=SE[i];
     let id,opts={};
     if(i===0){id=mine?'pilot':'crew_b'}
     else{id=PAX_IDS[(i*7+(mine?0:3))%PAX_IDS.length];if(i>PAX_IDS.length)opts.top=TOP_TINTS[(i*5)%TOP_TINTS.length]}
@@ -2076,7 +2170,7 @@ function newFlight(def){
   truck.traverse(o=>{if(o.isMesh)o.castShadow=true});
   truck.position.set(16,0,11);truck.rotation.y=.6;lzG.add(truck);
   lzG.position.set(LZ.x,ly,LZ.z);addDyn(lzG);LZG=lzG;
-  const slot=mySlot(),me=mkB(makeBalloon(PLAYER_ENV,true),slot[0],slot[1],0),others=[];if(me.g.userData.persons)me.g.userData.persons.forEach(P=>P.balloon=me);
+  const slot=mySlot();BSK=flightSpec();const me=mkB(makeBalloon(PLAYER_ENV,true),slot[0],slot[1],0);BSK=BSPEC.L;const others=[];sizeFlight(me);if(me.g.userData.persons)me.g.userData.persons.forEach(P=>P.balloon=me);
   const pool=['flag','band','check','blue','atlas'].filter(k=>k!==PLAYER_ENV);
   for(let i=0;i<(MP.on?2:5);i++){const a=r()*Math.PI*2,d=170+r()*380;const kd=pool[i%pool.length];const b=mkB(makeBalloon(kd),Math.cos(a)*d,Math.sin(a)*d,6+r()*40);b.kind=kd;b.ai={target:120,next:0,landAt:(200+r()*120)};others.push(b)}
   const pl=new THREE.PointLight(0xff9a40,0,55,2);pl.position.y=12;me.g.add(pl);me.light=pl;
@@ -2086,11 +2180,11 @@ function newFlight(def){
   const fan=new THREE.Group();const fh=new THREE.Mesh(new THREE.CylinderGeometry(1,1,.5,20,1,true),new THREE.MeshLambertMaterial({color:lin(0xd8463a),side:THREE.DoubleSide}));fh.rotation.x=Math.PI/2;fan.add(fh);
   const blade=new THREE.Mesh(new THREE.BoxGeometry(1.8,.18,.04),new THREE.MeshLambertMaterial({color:lin(0x333333)}));fan.add(blade);
   const fbase=new THREE.Mesh(new THREE.BoxGeometry(1.2,.3,1),new THREE.MeshLambertMaterial({color:lin(0x2a2a2a)}));fbase.position.y=-1;fan.add(fbase);
-  fan.position.set(2.2,1.2,1.4);fan.rotation.y=-.35;fan.traverse(o=>{if(o.isMesh)o.castShadow=true});site.add(fan);
+  fan.position.set(me.S.id==='L'?2.2:me.S.bwid/2+1.3,1.2,me.S.id==='L'?1.4:1.7);fan.rotation.y=-.35;fan.traverse(o=>{if(o.isMesh)o.castShadow=true});site.add(fan);
   const P3=ASSETS.ready,pp=(id,o,br,c)=>P3?crewPerson(id,o,br).root:makePerson(c);
-  const crown=pp('crew_c',{},crownBrain,0xf2a33a);crown.position.set(0,0,4.5+ENV_H+3);crown.rotation.y=Math.PI;site.add(crown);
-  const mouthL=pp('crew_b',{},mouthBrain,0x2e3a55),mouthR=pp('zaml',{top:0x2e3a55},mouthBrain,0x2e3a55);mouthL.position.set(-3.6,0,4.2);mouthR.position.set(3.6,0,4.2);mouthL.rotation.y=Math.PI/2;mouthR.rotation.y=-Math.PI/2;site.add(mouthL,mouthR);
-  const handsL=pp('crew_a',{},holdBasketBrain,0xe8e2d4),handsR=pp('crew_c',{top:0x5a3a2a},holdBasketBrain,0xe8e2d4);handsL.position.set(-3.1,0,-1.75);handsR.position.set(3.1,0,1.75);handsR.rotation.y=Math.PI;handsL.visible=handsR.visible=false;site.add(handsL,handsR);
+  const crown=pp('crew_c',{},crownBrain,0xf2a33a);crown.position.set(0,0,(4.5+ENV_H)*me.S.k+3);crown.rotation.y=Math.PI;site.add(crown);
+  const mouthL=pp('crew_b',{},mouthBrain,0x2e3a55),mouthR=pp('zaml',{top:0x2e3a55},mouthBrain,0x2e3a55);mouthL.position.set(-(1+2.6*me.S.k),0,4.5*me.S.k-.3);mouthR.position.set(1+2.6*me.S.k,0,4.5*me.S.k-.3);mouthL.rotation.y=Math.PI/2;mouthR.rotation.y=-Math.PI/2;site.add(mouthL,mouthR);
+  const handsL=pp('crew_a',{},holdBasketBrain,0xe8e2d4),handsR=pp('crew_c',{top:0x5a3a2a},holdBasketBrain,0xe8e2d4);handsL.position.set(-(me.S.bwid/2+.5),0,-(me.S.bd/2+.6));handsR.position.set(me.S.bwid/2+.5,0,me.S.bd/2+.6);handsR.rotation.y=Math.PI;handsL.visible=handsR.visible=false;site.add(handsL,handsR);
   const rg=new THREE.BufferGeometry();rg.setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,0,0,0],3));const rope=new THREE.Line(rg,new THREE.LineBasicMaterial({color:lin(0xeeeeee)}));rope.frustumCulled=false;addDyn(rope);
   // the other crews are already inflated and waiting with their trucks
   others.forEach(b=>{const pk=makePickup();const a=Math.random()*6.28;pk.position.set(b.x+Math.cos(a)*12,H(b.x,b.z),b.z+Math.sin(a)*12);pk.rotation.y=a;addDyn(pk)});
@@ -2113,10 +2207,10 @@ function newFlight(def){
   F.fireFX=makeFireFX();me.g.userData.basketG.add(F.fireFX);
   emArm();
   F.prevSide=side(line,me.x,me.z);seedAir();
-  camS.yaw=lay+Math.PI*.62;camS.pitch=.22;camS.dist=95;
+  camS.yaw=lay+Math.PI*.62;camS.pitch=.22;camS.dist=95*(.5+.5*me.S.k);
   if(me.g.userData.chute)me.g.userData.chuteY=me.g.userData.chute.position.y;
 }
-function mkB(g,x,z,delay){const y=H(x,z),b={g,x,y,z,rot:Math.random()*6.28,rotV:0,spin:(Math.random()-.5)*.08,vx:0,vz:0,vy:0,T:20,tanks:[TANK_KG,TANK_KG,TANK_KG,TANK_KG],tank:0,pax:16,auto:true,fuelOff:false,switchT:0,relightT:0,rip:false,air:false,done:false,delay,shadow:makeShadow()};b.T=teq(b)-3;dyn.push(b.shadow);g.position.set(x,y,z);addDyn(g);return b}
+function mkB(g,x,z,delay){const y=H(x,z),b={g,x,y,z,rot:Math.random()*6.28,rotV:0,spin:(Math.random()-.5)*.08,vx:0,vz:0,vy:0,T:20,S:BSK,tanks:Array(BSK.nt).fill(BSK.tk),tank:0,pax:BSK.pax,auto:true,fuelOff:false,switchT:0,relightT:0,rip:false,air:false,done:false,delay,shadow:makeShadow()};b.T=teq(b)-3;dyn.push(b.shadow);g.position.set(x,y,z);addDyn(g);return b}
 const side=(L,x,z)=>Math.sign((x-L.x0)*L.uz-(z-L.z0)*L.ux);
 function wind(y){const w=F.winds,t1=sstep(125,175,y),t2=sstep(425,475,y);return{x:lerp(lerp(w[0].x,w[1].x,t1),w[2].x,t2),z:lerp(lerp(w[0].z,w[1].z,t1),w[2].z,t2)}}
 const layerOf=y=>y<150?0:y<450?1:2;
@@ -2127,20 +2221,20 @@ const BURNER_W=3.6e6,LOSS_K=16500,DRAG_K=.5*.8*572;
 const MASS_FIXED=330+420+90+4*30,TANK_KG=40,PAX_KG=75,PILOT_KG=80;let T_GROUND=14,INVL={dT:0,a:0,b:1};
 function amb(y){const hm=ELEV+y,T=T_GROUND+INVL.dT*sstep(INVL.a,INVL.b,y)+273.15-.0065*y,P=101325*Math.pow(1-2.25577e-5*hm,5.25588);return{P,T,rho:P/(RAIR*T)}}
 const fuelKg=b=>b.tanks.reduce((s,v)=>s+v,0);
-const massOf=b=>MASS_FIXED+fuelKg(b)+PILOT_KG+b.pax*PAX_KG+(b.extra||0);
-function teq(b){const a=amb(b.y),ri=a.rho-massOf(b)/V_ENV;return a.P/(RAIR*ri)-273.15}
-function nextTank(b){for(let k=1;k<=4;k++){const i=(b.tank+k)%4;if(b.tanks[i]>.4&&i!==b.tankClosed)return i}return -1}
+const massOf=b=>b.S.mf+fuelKg(b)+PILOT_KG+b.pax*PAX_KG+(b.extra||0);
+function teq(b){const a=amb(b.y),ri=a.rho-massOf(b)/b.S.V;return a.P/(RAIR*ri)-273.15}
+function nextTank(b){const n=b.tanks.length;for(let k=1;k<=n;k++){const i=(b.tank+k)%n;if(b.tanks[i]>.4&&i!==b.tankClosed)return i}return -1}
 function physics(b,sd,burn,vent,turning){
   const a=amb(b.y),Ta=a.T-273.15;
   if(b.switchT>0)b.switchT-=sd/TS;if(b.relightT>0)b.relightT-=sd/TS;
   if(b.auto&&b.tanks[b.tank]<.4){const n=nextTank(b);if(n>=0)b.tank=n}
   const burning=burn&&!b.fuelOff&&!(b.switchT>0)&&!(b.relightT>0)&&b.tanks[b.tank]>.02&&!b.rip&&!(b.pilotOut&&!b.whisper)&&b.tank!==b.tankClosed;
-  const Ti=b.T+273.15,rhoi=a.P/(RAIR*Ti),mAir=rhoi*V_ENV,C=mAir*CPA;
-  let Q=-LOSS_K*(b.T-Ta);
-  if(burning){const W=BURNER_W*(b.boost?4:2)*(b.pilotOut&&b.whisper?.45:1);Q+=W;b.tanks[b.tank]=Math.max(0,b.tanks[b.tank]-W/LHV*sd)}
+  const Ti=b.T+273.15,rhoi=a.P/(RAIR*Ti),mAir=rhoi*b.S.V,C=mAir*CPA;
+  let Q=-b.S.lk*(b.T-Ta);
+  if(burning){const W=b.S.bw*(b.boost?b.S.n2:b.S.n1)*(b.pilotOut&&b.whisper?.45:1);Q+=W;b.tanks[b.tank]=Math.max(0,b.tanks[b.tank]-W/LHV*sd)}
   let ex=0;if(vent)ex+=.022;if(turning)ex+=.004;if(b.rip)ex+=.3;
   b.T+=(Q/C-ex*(b.T-Ta))*sd;
-  const M=massOf(b),lift=(a.rho-rhoi)*V_ENV*GRAV,drag=DRAG_K*a.rho*b.vy*Math.abs(b.vy),mEff=M+mAir+.5*a.rho*V_ENV;
+  const M=massOf(b),lift=(a.rho-rhoi)*b.S.V*GRAV,drag=b.S.dk*a.rho*b.vy*Math.abs(b.vy),mEff=M+mAir+.5*a.rho*b.S.V;
   b.vy+=(lift-M*GRAV-drag)/mEff*sd;b.y+=b.vy*sd;
   if(b.air){const w=wind(b.y);b.vx+=(w.x-b.vx)*.18*sd;b.vz+=(w.z-b.vz)*.18*sd;b.x+=b.vx*sd;b.z+=b.vz*sd}
   const gy=H(b.x,b.z);if(!b.air&&b.y-gy>3)b.air=true;b.burning=burning;
@@ -2218,7 +2312,7 @@ const PRE_TXT=['The crew lays the envelope out downwind and tips the basket on i
 const ROLE_PRE={chase:['You\'re the chase crew. The envelope is laid out downwind; the Fortuner and trailer wait at the edge of the field.','Cold inflation: the fan is running. Soon you follow the balloon on the dirt tracks.','Hot inflation: the pilot is burning. Get ready to drive.','Passengers are boarding. The pilot briefs them on the landing position.','Pre-take-off checks.','Hands off! Follow the balloon and be there when the basket touches down.'],
   drone:['You\'re the drone pilot. Tap LAUNCH DRONE and film the inflation from the air.','Cold inflation: the fan is running. Great moment to fly low over the envelope.','Hot inflation: the burner glow is the shot. Keep 30 m from the envelope.','Boarding. Bring the drone back, pack it, then drive the Logan to the landing.','Pre-take-off checks.','Lift-off! Film it, then follow the balloon and film the landing.']};
 const CHECKS=['Burner test, all four burners','Flight wires and carabiners','Parachute line (red/white), red RDS line, black and green rotation lines','Four cylinders full, flight cylinder selected','Altimeter, variometer, envelope thermometer','Fire extinguisher and handling line aboard','Crew confirms clear above'];
-function preUI(){const P=F.pre;$('pre').hidden=false;[...$('preSteps').children].forEach((el,i)=>{el.className=i===P.stage?'on':i<P.stage?'done':''});
+function preUI(){const P=F.pre;$('pre').hidden=false;{const gon=guideOn();$('preSteps').hidden=gon;$('preTxt').hidden=gon}[...$('preSteps').children].forEach((el,i)=>{el.className=i===P.stage?'on':i<P.stage?'done':''});
   if(F.auto){$('preTxt').textContent=P.warn||ROLE_PRE[ROLE][P.stage];return}
   $('preTxt').textContent=P.stage===4?`Pre-take-off checks ${Math.min(P.ck,CHECKS.length)}/${CHECKS.length}: ${CHECKS[Math.min(P.ck,CHECKS.length-1)]} ✓`:(P.warn||PRE_TXT[P.stage])}
 function preStage(n){F.pre.stage=n;F.pre.t=0;F.pre.warn=n===0?wxLimits():'';preUI()}
@@ -2264,7 +2358,7 @@ function stepOthers(sd){
 /* ================= autopilot (the company pilot flies when you are crew) ================= */
 function autopilot(b){
   const A=F.ap,agl=b.y-H(b.x,b.z),dx=F.LZ.x-b.x,dz=F.LZ.z-b.z,d=Math.hypot(dx,dz);
-  if(!A.landing&&b.air&&(d<650||F.simT>A.maxT||fuelKg(b)<.34*4*TANK_KG))A.landing=true;
+  if(!A.landing&&b.air&&(d<650||F.simT>A.maxT||fuelKg(b)<.34*fMax(b)))A.landing=true;
   if(!A.landing){
     if(F.simT>A.next){A.next=F.simT+40;let best=1,bs=-1e9;for(let i=0;i<3;i++){const w=F.winds[i],s=(w.x*dx+w.z*dz)/(d||1);if(s>bs){bs=s;best=i}}A.target=[70,300,560][best]}
     return{burn:(b.y<A.target-8&&b.vy<1.8)||b.vy<-1.2||!b.air,vent:b.y>A.target+30&&b.vy>-.6};
@@ -2465,10 +2559,10 @@ function step(dt){
     if(allBalloons().some(b=>b!==me&&Math.hypot(b.x-me.x,b.z-me.z)<350&&(b.ref||b.air)))S.near+=sd}
   if(!F.auto&&F.phase==='fly'&&me.air){
     if(me.T>120)V.temp=true;
-    if(Math.abs(me.vy)>4.06){F.rateT=(F.rateT||0)+sd;if(F.rateT>1)V.rate=true}else F.rateT=0;
+    if(Math.abs(me.vy)>me.S.rate/FPM){F.rateT=(F.rateT||0)+sd;if(F.rateT>1)V.rate=true}else F.rateT=0;
     if(keys.vent){F.ventT=(F.ventT||0)+sd;if(F.ventT>3)V.vent=true}else F.ventT=0;
     if(agl<600&&agl>30&&me.vy<-3.5&&!me.burning){F.coldT=(F.coldT||0)+sd;if(F.coldT>2)V.cold=true}else F.coldT=0;
-    if(fuelKg(me)<.25*4*TANK_KG)V.reserveUsed=true;
+    if(fuelKg(me)<.25*fMax(me))V.reserveUsed=true;
   }
   if(me.T>127)return end('heat');
   if(F.em&&F.em.type==='fire'&&F.em.int>=1.38)return end('fire');
@@ -2593,7 +2687,7 @@ function showResult(){
   const items=[
     [!V.inflate,'Hot inflation in short bursts','inflate'],
     [!V.temp,'Envelope kept at or under 120 °C','temp'],
-    [!V.rate,'Climb and descent within 800 ft/min','rate'],
+    [!V.rate,`Climb and descent within ${fmtFt(me.S.rate)} ft/min`,'rate'],
     [!V.vent,'Parachute never held open over 3 s','vent'],
     [!V.cold,'Cold descent stopped above 2,000 ft','cold'],
     [landed?td.lp:null,'Landing position called before touchdown','lp'],
@@ -2601,7 +2695,7 @@ function showResult(){
     [landed?fpm<=400:null,landed?`Touchdown at ${fpm} ft/min (limit 400)`:'Touchdown at 400 ft/min or less','fpm'],
     [landed?td.orient:null,'Basket landed on its long side','orient'],
     [landed?(!!V.redOk&&!V.ripHigh&&!V.dragged):null,'Red line pulled on the ground','red'],
-    [!V.reserveUsed,`Landed with the 25% fuel reserve (${Math.round(fuelKg(me)/(4*TANK_KG)*100)}% left)`,'reserve']];
+    [!V.reserveUsed,`Landed with the 25% fuel reserve (${Math.round(fuelKg(me)/(fMax(me))*100)}% left)`,'reserve']];
   if(E&&E.type==='pilot')items.push([!!(E.relit||E.whisper),'Pilot-light failure: relit or flew on the whisper valve','emPilot'],[landed?landSoon:false,'Landed within 6 min of the failure','emPilot']);
   if(E&&E.type==='fire')items.push([E.closedT!=null&&E.closedT<=10,'Cylinder valve closed within 10 s','emFire'],[E.closed&&!E.wrong,'Valve closed before the extinguisher','emFire'],[!!E.switched,'Restarted on a healthy cylinder','emFire'],[landed?landSoon:false,'Landed within 6 min of the fire','emFire']);
   const scored=items.filter(i=>i[0]!==null),ok=scored.filter(i=>i[0]).length;
@@ -2725,9 +2819,9 @@ function hudPilot(){
   setCell(1,'Height',Math.round(agl*M2FT),'ft');
   const f=Math.round(me.vy*FPM/10)*10;setCell(2,'Vario',(f>0?'+':'')+f,'fpm');
   setCell(3,'Envelope',Math.round(me.T),'°C');$('cTemp').classList.toggle('warn',me.T>118);
-  const tk=me.tanks[me.tank]/TANK_KG,tot=fuelKg(me)/(4*TANK_KG);
+  const tk=me.tanks[me.tank]/me.S.tk,tot=fuelKg(me)/(fMax(me));
   setCell(4,me.switchT>0?'Switching…':`Propane #${me.tank+1}`+(me.tankClosed===me.tank?' shut':''),Math.round(tk*100),'%');
-  [...$('tanks').children].forEach((el,i)=>{el.className=i===me.tank?'on':'';el.firstChild.style.width=Math.round(me.tanks[i]/TANK_KG*100)+'%';el.style.opacity=me.tankClosed===i?.35:1});
+  [...$('tanks').children].forEach((el,i)=>{el.className=i===me.tank?'on':'';el.firstChild.style.width=Math.round(me.tanks[i]/me.S.tk*100)+'%';el.style.opacity=me.tankClosed===i?.35:1});
   $('cFuel').classList.toggle('warn',tk<.06||tot<.25);
   windRows(me.y);
   const dx=F.LZ.x-me.x,dz=F.LZ.z-me.z;
@@ -2741,10 +2835,10 @@ function hudPilot(){
     else if(F.em&&!F.em.closedUI&&F.em.type==='pilot'&&me.pilotOut&&!me.whisper)t='PILOT LIGHTS OUT';
     else if(F.phase==='ground'&&!me.rip){t='On the ground: pull the RED LINE';}
     else if(MP.near){t=MP.near.vd<0?`${MP.near.name} is below you: they have right of way`:`${MP.near.name} is above you: hold your climb`;}
-    else if(me.air&&Math.abs(me.vy)>4.06)t=me.vy>0?'Climb over 800 ft/min':'Descent over 800 ft/min';
+    else if(me.air&&Math.abs(me.vy)>me.S.rate/FPM)t=(me.vy>0?'Climb over ':'Descent over ')+fmtFt(me.S.rate)+' ft/min';
     else if(keys.vent&&F.ventT>1.5)t=`Parachute open ${F.ventT.toFixed(1)} s (max 3)`;
     else if(me.tanks[me.tank]<.4&&!me.fuelOff)t='Cylinder empty: tap Propane to switch';
-    else if(me.air&&fuelKg(me)<.25*4*TANK_KG)t='Fuel reserve reached: land now';
+    else if(me.air&&fuelKg(me)<.25*fMax(me))t='Fuel reserve reached: land now';
     else if(me.fuelOff&&me.air&&ag>60)t='Pilot lights are off';
     else if(me.air&&ag<90&&me.vy<-.2){warn=fpmNow>Math.max(2*agFt,150)||fpmNow>400;t=`Approach ${Math.round(fpmNow)} ft/min at ${Math.round(agFt)} ft`+(warn?': too fast':': good');}
     else if(!me.air&&F.t>2.5&&!keys.burn){t='Short bursts on BURN to lift off';warn=false}
@@ -2789,23 +2883,23 @@ function syncBalloon(b,dt){
   b.g.position.set(b.x,b.y,b.z);b.g.rotation.y=b.rot;
   const u=b.g.userData;u.glow=lerp(u.glow,b.burning?1:0,Math.min(1,dt*10));
   const whisper=b.pilotOut&&b.whisper;
-  u.flames.forEach((f,i)=>{f.visible=u.glow>.08&&(i<2||b.boost||b===F.me&&F.phase==='pre');f.scale.set(whisper?.6:1,u.glow*(.75+Math.random()*.5)*(whisper?.55:1),whisper?.6:1)});
+  u.flames.forEach((f,i)=>{f.visible=u.glow>.08&&(i<b.S.n1||b.boost||b===F.me&&F.phase==='pre');f.scale.set(whisper?.6:1,u.glow*(.75+Math.random()*.5)*(whisper?.55:1),whisper?.6:1)});
   u.emat.emissive.setRGB(.85*u.glow,.55*u.glow,.3*u.glow);
   const agl0=b.y-H(b.x,b.z),ct=b===F.me?((F.lp&&(F.phase==='fly'||F.phase==='ground'))||(F.phase==='done'&&F.td&&F.td.lp)?1:0):(b.air&&agl0<55&&b.vy<-.15?1:0);
   u.crouchNow=lerp(u.crouchNow,ct,Math.min(1,dt*3));setCrouch(b.g,Math.round(u.crouchNow*20)/20);
   if(b.light)b.light.intensity=u.glow*3;
   ventFX(b.g,b.venting,b.turnDir||0,b.rip,dt);
-  if(b.shadow.visible){const gy=H(b.x,b.z),agl=b.y-gy,sz=clamp(22-agl*.02,6,22);b.shadow.position.set(b.x,gy+.4,b.z);b.shadow.scale.set(sz,1,sz);b.shadow.material.opacity=clamp(1-agl/500,0,1)}
+  if(b.shadow.visible){const gy=H(b.x,b.z),agl=b.y-gy,sz=clamp(22-agl*.02,6,22);b.shadow.position.set(b.x,gy+.4,b.z);b.shadow.scale.set(sz*b.S.k,1,sz*b.S.k);b.shadow.material.opacity=clamp(1-agl/500,0,1)}
 }
 function ventFX(g,vent,turn,rip,dt){const u=g.userData;if(!u.chute)return;u.vo=lerp(u.vo||0,rip?1:vent?.35:0,Math.min(1,dt*(rip?1.5:4)));u.chute.position.y=u.chuteY-u.vo*7;
   u.slitL.visible=turn>0;u.slitR.visible=turn<0}
 function updateCamera(dt,sh){
   const me=F.me;
   if(ROLE==='pilot'){
-    if(camS.mode==='chase'){tmpV.set(me.x,me.y+lerp(2.5,15,clamp((camS.dist-22)/90,0,1)),me.z);const cp=Math.cos(camS.pitch);
+    if(camS.mode==='chase'){tmpV.set(me.x,me.y+lerp(2.5,15*me.S.k,clamp((camS.dist-22)/90,0,1)),me.z);const cp=Math.cos(camS.pitch);
       cam.position.set(tmpV.x+Math.sin(camS.yaw)*cp*camS.dist,tmpV.y+Math.sin(camS.pitch)*camS.dist,tmpV.z+Math.cos(camS.yaw)*cp*camS.dist);
       cam.position.y=Math.max(cam.position.y,H(cam.position.x,cam.position.z)+3);cam.lookAt(tmpV)}
-    else{const lz=-.95,cr=Math.cos(me.rot),sr=Math.sin(me.rot);cam.position.set(me.x+lz*sr,me.y+1.72,me.z+lz*cr);const cp=Math.cos(camS.bpitch);
+    else{const lz=me.S.camZ,cr=Math.cos(me.rot),sr=Math.sin(me.rot);cam.position.set(me.x+lz*sr,me.y+1.72,me.z+lz*cr);const cp=Math.cos(camS.bpitch);
       tmpV.set(cam.position.x-Math.sin(camS.yaw)*cp,cam.position.y+Math.sin(camS.bpitch),cam.position.z-Math.cos(camS.yaw)*cp);cam.lookAt(tmpV)}
   }else if(droneFlying()){const D=F.drone,cp=Math.cos(camS.bpitch);
     if(camS.vmode==='drone3p'){const c2=Math.cos(.25);cam.position.set(D.x+Math.sin(camS.yaw)*2.6*c2,D.y+.75,D.z+Math.cos(camS.yaw)*2.6*c2);cam.lookAt(D.x,D.y+.1,D.z)}
@@ -2823,7 +2917,7 @@ let last=performance.now(),hudT=0;
 function frame(now){
   const dt=Math.min(.05,(now-last)/1000);last=now;
   if(F){
-    if(SCH_PAUSE>0){SCH_PAUSE=Math.max(0,SCH_PAUSE-dt);schoolPaused()}else{groundStep(dt);step(dt);schoolStep(dt)}const me=F.me;
+    if(SCH_PAUSE>0){SCH_PAUSE=Math.max(0,SCH_PAUSE-dt);schoolPaused()}else{groundStep(dt);step(dt);schoolStep(dt);guideStep(dt)}const me=F.me;
     if(F.phase!=='intro'&&!F.hideMe){
       const ta=F.phase==='fly'&&ROLE==='pilot'?(keys.turnL?1:0)-(keys.turnR?1:0):0;
       me.rotV=clamp((me.rotV+ta*.55*dt)*(1-Math.min(1,.45*dt)),-.75,.75);me.rot+=me.rotV*dt;
@@ -3126,7 +3220,7 @@ function airStart(ft,o={}){
   if(o.extra)me.extra=o.extra;
   me.y=H(me.x,me.z)+ft/M2FT;me.air=true;F.wasAir=true;F.takeoffT=F.simT;
   me.T=o.T!=null?o.T:teq(me)+(o.dT||0);me.vy=o.vy||0;const w=wind(me.y);me.vx=w.x;me.vz=w.z;
-  F.prevSide=side(F.line,me.x,me.z);seedAir();camS.dist=95;camS.pitch=.2;camS.yaw=me.rot+Math.PI*.62}
+  F.prevSide=side(F.line,me.x,me.z);seedAir();camS.dist=95*(.5+.5*me.S.k);camS.pitch=.2;camS.yaw=me.rot+Math.PI*.62}
 // split the way to a target into time in two wind layers (a·w_i + b·w_j = target, a,b >= 0)
 function navPlan(me,tx,tz){const W=F.winds,dx=tx-me.x,dz=tz-me.z,cur=layerOf(me.y);let best=null;
   for(const[i,j]of[[0,1],[0,2],[1,2]]){const a1=W[i].x,b1=W[j].x,a2=W[i].z,b2=W[j].z,det=a1*b2-b1*a2;if(Math.abs(det)<1e-3)continue;
@@ -3144,10 +3238,10 @@ function lineAhead(me){const L=F.line;if(!L)return null;const dist=(me.x-L.x0)*L
   const ax=me.x+me.vx*t,az=me.z+me.vz*t,along=(ax-L.x0)*L.ux+(az-L.z0)*L.uz;if(along<0||along>L.L)return null;return{t,d:Math.abs(dist)}}
 
 /* ---------- the instructor's eye: where will the balloon be if you burn / stop now? ---------- */
-function predict(me,burnSec,horizon){let y=me.y,vy=me.vy,T=me.T,peak=y,low=y,t=0;const M=massOf(me),dt=.5;
-  for(;t<horizon;t+=dt){const a=amb(y),Ta=a.T-273.15,rhoi=a.P/(RAIR*(T+273.15)),mAir=rhoi*V_ENV,burning=t<burnSec;
-    T+=(-LOSS_K*(T-Ta)+(burning?BURNER_W*2:0))/(mAir*CPA)*dt;
-    const lift=(a.rho-rhoi)*V_ENV*GRAV,drag=DRAG_K*a.rho*vy*Math.abs(vy);vy+=(lift-M*GRAV-drag)/(M+mAir+.5*a.rho*V_ENV)*dt;y+=vy*dt;
+function predict(me,burnSec,horizon){let y=me.y,vy=me.vy,T=me.T,peak=y,low=y,t=0;const M=massOf(me),dt=.5,S=me.S;
+  for(;t<horizon;t+=dt){const a=amb(y),Ta=a.T-273.15,rhoi=a.P/(RAIR*(T+273.15)),mAir=rhoi*S.V,burning=t<burnSec;
+    T+=(-S.lk*(T-Ta)+(burning?S.bw*S.n1:0))/(mAir*CPA)*dt;
+    const lift=(a.rho-rhoi)*S.V*GRAV,drag=S.dk*a.rho*vy*Math.abs(vy);vy+=(lift-M*GRAV-drag)/(M+mAir+.5*a.rho*S.V)*dt;y+=vy*dt;
     peak=Math.max(peak,y);low=Math.min(low,y);if(t>2&&!burning&&burnSec<1e3&&vy<0&&me.vy>0)break;if(burnSec>=1e3&&t>2&&vy>0)break}
   return{y,vy,peak,low,t}}
 
@@ -3317,7 +3411,7 @@ const LESSONS=[
   setup(L){L.target=1000;airStart(1000);const me=F.me;me.tanks[0]=2.8;me.tank=0},
   coach(L,c){const me=F.me;if(me.tank===0&&me.tanks[0]<1.6)return coachSay('l15',c.fpm<-60?'Cylinder #1 nearly empty. Get a climb going first, then switch.':'Cylinder #1 nearly empty: switch now, while you\'re level or climbing. Tap Propane.',3,12);return false},
   step(L,c){const me=c.me;if(Math.abs(c.ft-1000)>200)LO.no(L,'alt',`Reached ${fmtFt(c.ft)} ft`);
-    if(L.sw==null){if(me.tank!==0){L.sw=L.t;me.tanks[0]>.02?LO.ok(L,'before',Math.round(me.tanks[0]/TANK_KG*100)+'% left'):LO.no(L,'before','Ran dry first');
+    if(L.sw==null){if(me.tank!==0){L.sw=L.t;me.tanks[0]>.02?LO.ok(L,'before',Math.round(me.tanks[0]/me.S.tk*100)+'% left'):LO.no(L,'before','Ran dry first');
         c.fpm<-60?LO.no(L,'climbing',`Descending ${fmtFt(-c.fpm)} ft/min`):LO.ok(L,'climbing')}
       else if(me.tanks[0]<=.02)LO.no(L,'before','Cylinder #1 ran dry')}
     else{L.hold+=c.sd;LO.p(L,'hold',`${Math.floor(L.hold)}/60 s`);if(L.hold>=60)LO.ok(L,'hold')}}},
@@ -3348,8 +3442,8 @@ function coachGeneric(c,L){
   if(F.phase!=='fly'||!me.air)return;
   const ft=c.ft,fpm=c.fpm,desc=-fpm;
   if(c.T>=115&&me.burning)return coachSay('hot',`Envelope ${Math.round(c.T)} °C: stop burning and let it settle. Limit 120 °C (2.2.1.1).`,3,10);
-  if(fpm>650)return coachSay('cf',`Climbing ${fmtFt(fpm)} ft/min: ease off. The limit is 800 ft/min (3.5.10).`,3,12);
-  if(me.burning&&fpm>0){const pv=predict(me,0,20).vy*FPM;if(ft<300&&pv>480)return coachSay('lo',`Stop burning: the climb is still building, toward ${fmtFt(pv)} ft/min. Lift off gently.`,2,12);if(pv>700)return coachSay('cb',`Stop burning: the climb is still building, toward ${fmtFt(pv)} ft/min (limit 800).`,2,12)}
+  if(fpm>me.S.rate-150)return coachSay('cf',`Climbing ${fmtFt(fpm)} ft/min: ease off. The limit is ${fmtFt(me.S.rate)} ft/min (3.5.10).`,3,12);
+  if(me.burning&&fpm>0){const pv=predict(me,0,20).vy*FPM;if(ft<300&&pv>480)return coachSay('lo',`Stop burning: the climb is still building, toward ${fmtFt(pv)} ft/min. Lift off gently.`,2,12);if(pv>me.S.rate-100)return coachSay('cb',`Stop burning: the climb is still building, toward ${fmtFt(pv)} ft/min (limit ${fmtFt(me.S.rate)}).`,2,12)}
   if(keys.vent&&(F.ventT||0)>2)return coachSay('vent','Let go of the vent: 3 s at most, then let the envelope re-inflate (3.5.10).',3,8);
   if(desc>550&&ft>300&&ft<3000&&!me.burning)return coachSay('cold',ft<2500?`Fast descent at ${fmtFt(ft)} ft: stop it by 2,000 ft with short, frequent bursts (9.2.4).`:`Descending ${fmtFt(desc)} ft/min: start burning now, it takes 10–20 s to bite.`,3,12);
   const pl=lineAhead(me);if(pl&&pl.t<75&&c.agl<F.line.h+45)return coachSay('wire',`Power line ahead in about ${Math.round(pl.t)} s, 59 ft high. Climb now to clear it by 100 ft, or land well before it (12.1.2).`,3,15);
@@ -3358,7 +3452,7 @@ function coachGeneric(c,L){
     if(desc>Math.max(2*ft,200)+50&&ft>20)return coachSay('appr',`${fmtFt(desc)} ft/min at ${fmtFt(ft)} ft is too fast: no more than twice your height, ${Math.max(200,Math.round(ft/5)*10)} ft/min (3.6.3).`,3,8);
     if(ft<120&&!orientOK(me))return coachSay('or','Turn the basket long side forward: black ⟲ or green ⟳.',2,15);
     if(ft<50&&!me.fuelOff)return coachSay('plo','Pilot lights off before touchdown (F).',2,10)}
-  if(!(def&&def.noFuelCoach)){const tk=me.tanks[me.tank]/TANK_KG,tot=fuelKg(me)/(4*TANK_KG);
+  if(!(def&&def.noFuelCoach)){const tk=me.tanks[me.tank]/me.S.tk,tot=fuelKg(me)/(fMax(me));
     if(tk<.12&&me.tanks[me.tank]>.4)return coachSay('tank',`Cylinder #${me.tank+1} at ${Math.round(tk*100)}%: switch while level or climbing (8.3.4). Tap Propane.`,2,40);
     if(tot<.25)return coachSay('rsv2','Into the reserve: tell the crew and land now (8.1.2).',3,45);
     if(tot<.32)return coachSay('rsv',`Fuel ${Math.round(tot*100)}%: time to plan the landing. Land with the 25% reserve (8.1.1).`,2,60)}
@@ -3367,6 +3461,76 @@ function coachGeneric(c,L){
     if(fpm>60&&tg>ft&&me.burning){const pk=(predict(me,0,150).peak-gy)*M2FT;if(pk>=tg-40)return coachSay('sb',`Stop burning now: the heat already in the envelope carries you up another ${fmtFt(Math.max(0,pk-ft))} ft.`,2,18)}
     if(desc>60&&ft>tg&&!me.burning){const lw=(predict(me,1e3,150).low-gy)*M2FT;if(lw<=tg+40)return coachSay('ct',`Start burning now to level at ${fmtFt(tg)} ft: even burning now, you'll sink another ${fmtFt(Math.max(0,ft-lw))} ft.`,2,18)}}
 }
+
+/* ---------- balloon size applied to the flight: cylinders on the HUD, briefing and check texts ---------- */
+const PRE_BOARD=PRE_TXT[3],CHECK0=CHECKS[0],CHECK3=CHECKS[3];
+function sizeFlight(me){const S=me.S;
+  $('tanks').innerHTML=Array.from({length:S.nt},(_,i)=>`<i${i?'':' class="on"'}><b></b></i>`).join('');
+  PRE_TXT[3]=S.id==='L'?PRE_BOARD:PRE_BOARD.replace('16 passengers climb in, four per compartment',S.id==='M'?'8 passengers climb in, two per corner compartment':'3 passengers climb in and stand along the front wall');
+  CHECKS[0]=S.id==='S'?'Burner test, both burners':CHECK0;CHECKS[3]=S.nt===3?'Three cylinders full, flight cylinder selected':CHECK3}
+
+/* ---------- the instructor's flight guide: one card that walks a normal flight phase by phase ---------- */
+const GUIDE_PH=['Prep','Inflate','Board','Lift-off','Climb','Cruise','Approach','Land','Pack-up'];
+const GD={f:null,ph:-1,key:'',open:null,climbed:false,appr:false,t:0};
+function guideOn(){return !!F&&ROLE==='pilot'&&COACH_ON&&!F.auto&&!F.hideMe&&F.phase!=='intro'&&$('intro').hidden&&!(SCHOOL.L&&!SCHOOL.L.done)}
+function guideBest(me){const dx=F.LZ.x-me.x,dz=F.LZ.z-me.z,d=Math.hypot(dx,dz)||1;let best=0,bs=-1e9;for(let i=0;i<3;i++){const w=F.winds[i],sp=Math.hypot(w.x,w.z)||1,s=(w.x*dx+w.z*dz)/d/sp;if(s>bs){bs=s;best=i}}return{best,good:bs,d}}
+function guidePhase(me,ft,fpm){
+  if(F.phase==='pre'){const s=F.pre.stage;return s===0?0:s<=2?1:s<=4?2:3}
+  if(F.phase==='ground')return me.rip?8:7;
+  if(F.phase==='done')return 8;
+  if(!me.air||(F.simT-(F.takeoffT||0)<45&&ft<150))return 3;
+  const tot=fuelKg(me)/fMax(me),d=Math.hypot(F.LZ.x-me.x,F.LZ.z-me.z);
+  if(!GD.appr&&(F.lp||d<1300||tot<.33||(GD.climbed&&ft<350&&fpm<-80)))GD.appr=true;
+  if(GD.appr)return F.lp||ft<120?7:6;
+  if(!GD.climbed){if(ft>=900||(F.simT-(F.takeoffT||0)>100&&Math.abs(fpm)<150))GD.climbed=true;else return 4}
+  return 5}
+function guideText(ph,me){const P=F.pre,st=P?P.stage:5,R=fmtFt(me.S.rate);
+  switch(ph){
+  case 0:return{t:'Pre-flight',r:'3.1–3.3',tips:['Weather: the forecast and the wind at every height, inside the limits (3.1.3).','Crew briefing: who holds the mouth, who takes the crown line, where the chase car goes (3.3.1).','Envelope laid out downwind, basket on its side, burners pointing into the mouth.']};
+  case 1:return st<2?{t:'Cold inflation',r:'3.2.1.2',tips:['The fan fills the envelope with cold air. No burning yet.','The mouth crew holds the mouth open; the crown crew keeps the white crown line taut.','Look inside: lines free, parachute seated, no damage.']}
+    :{t:'Hot inflation',r:'3.2.1.2',tips:['Hold BURN 2–3 s, pause, repeat. Long burns scorch the mouth crew and the fabric.','Aim the flame at the middle of the mouth; the envelope rises and stands the basket up.','The crown crew lets the line run as the envelope comes up.']};
+  case 2:return st<4?{t:'Boarding and briefing',r:'3.3.2',tips:['Passengers climb in right after inflation: their weight keeps the basket down (3.4).','Brief them: landing position, hands off the ropes, phones and bags secured, follow every instruction.','A crew member stays at the basket the whole time.']}
+    :{t:'Pre-take-off checks',r:'3.4',tips:['Burners and hoses (no leaks), parachute and control lines, cylinders, instruments.','Switch from the inflation cylinder to the first flight cylinder.','A crew member steps back and confirms it is clear above.']};
+  case 3:return{t:'Lift-off',r:'3.4.1',tips:['Hands off: the crew stays around the basket but lets go.','Two or three bursts make the balloon light and it lifts off slowly.','Climb out slowly and watch above: the lower balloon has right of way.']};
+  case 4:return{t:'Climb',r:'3.5.2',tips:['Burn a little more often to climb; stop before the height you want, the heat keeps lifting you.',`Climb and descent within ${R} ft/min; envelope at or under 120 °C (3.5.10).`,'The vario reacts 10–20 s after a burn: be patient.']};
+  case 5:return{t:'Cruise and navigation',r:'3.5.7–3.5.8',tips:['Level flight: short, regular burns keep the envelope temperature steady.','Steer with height: each layer blows a different way. Watch the wind panel.','Switch cylinders while level or climbing (8.3.4). Land with at least 25% fuel (8.1).']};
+  case 6:return{t:'Approach',r:'3.6.1–3.6.2',tips:['Choose an open field on your track: no power lines, crops or herds.','Pre-landing checks: passengers briefed, red line at hand, fuel for a go-around.','Controlled descent: no faster than twice your height in ft/min, 400 ft/min max near the ground (3.6.3).']};
+  case 7:return{t:'Landing',r:'3.6.3–3.6.4',tips:['LANDING POSITION (L) by 150 ft: knees bent, hold the handles, face backwards.','Pilot lights off just before touchdown (F). Long side forward with the black/green lines.','On the ground pull the RED LINE (R). Everyone stays in until the basket stops.']};
+  default:return{t:'Deflation and pack-up',r:'3.6.6',tips:['Close all valves and vent the fuel left in the hoses.','The crew walks the air out from the mouth to the crown, then packs the envelope into its bag, crown first.','Ask the field owner\'s permission before collecting, then log the flight (3.8).']}}}
+function guideNow(ph,me,ft,fpm){const P=F.pre,desc=-fpm;
+  switch(ph){
+  case 0:return P.warn||`Surface wind ${Math.round(Math.hypot(F.winds[0].x,F.winds[0].z)*1.944)} kt. The crew is laying out the envelope.`;
+  case 1:if(P.stage<2)return `Cold air in: ${Math.round(P.cold*100)}%. Wait for the fan.`;
+    if(P.warn)return{w:1,t:P.warn};return P.run>2.6?{w:1,t:'Let go now! Pause before the next burst.'}:`Standing up: ${Math.round(P.stand*100)}%. Hold BURN 2–3 s, then pause.`;
+  case 2:return P.stage<4?`Boarding: ${P.boarded} of ${me.pax} passengers in.`:`Check ${Math.min(P.ck+1,CHECKS.length)} of ${CHECKS.length}: ${CHECKS[Math.min(P.ck,CHECKS.length-1)]}.`;
+  case 3:if(F.phase==='pre'||!me.air)return 'Short bursts on BURN until the balloon is light and lifts off.';
+    return fpm>480?{w:1,t:`Climbing ${fmtFt(fpm)} ft/min already: stop burning, keep the lift-off gentle.`}:`${fmtFt(ft)} ft, climbing ${fmtFt(Math.max(0,fpm))} ft/min. Keep it slow until you are clear.`;
+  case 4:{const g=guideBest(me);if(fpm>me.S.rate-150)return{w:1,t:`Climbing ${fmtFt(fpm)} ft/min: ease off, the limit is ${fmtFt(me.S.rate)}.`};
+    return `Best wind to the flag: the ${LAYER[g.best]}. Now ${fmtFt(ft)} ft, ${fpm>=0?'up':'down'} ${fmtFt(Math.abs(fpm))} ft/min.`}
+  case 5:{const g=guideBest(me),tot=fuelKg(me)/fMax(me),here=layerOf(me.y-H(me.x,me.z)),w=wind(me.y),wl=Math.hypot(w.x,w.z)||1,dx=F.LZ.x-me.x,dz=F.LZ.z-me.z,on=(w.x*dx+w.z*dz)/(wl*(g.d||1));
+    const fl=g.d>1000?(g.d/1000).toFixed(1)+' km':Math.round(g.d)+' m';
+    if(tot<.35)return{w:1,t:`Fuel ${Math.round(tot*100)}%: plan the landing now.`};
+    return here===g.best||on>.8?`Flag ${fl} away, drifting toward it. Fuel ${Math.round(tot*100)}%.`:`Flag ${fl} away. The ${LAYER[g.best]} heads there better. Fuel ${Math.round(tot*100)}%.`}
+  case 6:{const tg=Math.min(800,Math.max(200,Math.round(ft*2/50)*50)),d=Math.hypot(F.LZ.x-me.x,F.LZ.z-me.z);
+    if(desc>tg+60)return{w:1,t:`Descending ${fmtFt(desc)} ft/min at ${fmtFt(ft)} ft: too fast, keep it under ${fmtFt(tg)}.`};
+    return desc>40?`Descending ${fmtFt(desc)} ft/min at ${fmtFt(ft)} ft. Target under ${fmtFt(tg)} ft/min. Flag ${Math.round(d)} m.`:`Flag ${Math.round(d)} m. Let the envelope cool a little to start down.`}
+  case 7:{if(F.phase==='ground'&&!me.rip)return{w:1,t:'On the ground: pull the RED LINE now (R).'};const ck=(ok,t)=>(ok?'✓ ':'○ ')+t;
+    return [ck(F.lp,'Landing position'),ck(me.fuelOff,'Pilot lights off'),ck(orientOK(me),'Long side forward'),ck(me.rip,'Red line')].join('  ·  ')}
+  default:return F.phase==='ground'?'Red line pulled: the envelope is going down. Stay in the basket.':(F.kind==='land'?'Down safely. Valves closed; the crew is packing the envelope.':'Flight over.')}}
+function guideRender(ph,me){const g=guideText(ph,me),el=$('guide');if(GD.open==null)GD.open=SH>=560;
+  el.innerHTML=`<div class="gh"><b>Instructor</b><span>${ph+1}/9 · ${g.t}</span><small>${g.r} ${GD.open?'▴':'▾'}</small></div>`+
+    (GD.open?`<div class="gs">${GUIDE_PH.map((p,i)=>`<i class="${i<ph?'d':i===ph?'on':''}">${i<ph?'✓ ':''}${p}</i>`).join('')}</div><ul>${g.tips.map(t=>`<li>${t}</li>`).join('')}</ul>`:'')+
+    `<div class="gn" id="gNow"></div>`}
+$('guide').addEventListener('click',()=>{GD.open=!GD.open;GD.key=''});
+function guideStep(dt){
+  const el=$('guide'),on=guideOn();if(F&&F.phase==='pre'&&$('preTxt').hidden!==on){$('preSteps').hidden=on;$('preTxt').hidden=on;$('pre').classList.toggle('slim',on)}
+  if(!on){if(!el.hidden)el.hidden=true;return}
+  if(GD.f!==F){GD.f=F;GD.ph=-1;GD.key='';GD.climbed=F.phase==='fly'&&F.me.air;GD.appr=false;GD.t=1}
+  GD.t+=dt;if(GD.t<.25)return;GD.t=0;
+  const me=F.me,agl=me.y-H(me.x,me.z),ft=Math.max(0,agl*M2FT),fpm=me.vy*FPM,ph=guidePhase(me,ft,fpm);
+  const key=ph+'|'+(F.pre?F.pre.stage:'')+'|'+GD.open;if(key!==GD.key){GD.key=key;GD.ph=ph;guideRender(ph,me)}
+  el.hidden=false;const n=guideNow(ph,me,ft,fpm),nw=$('gNow');if(!nw)return;const t=typeof n==='string'?n:n.t;
+  if(nw.textContent!==t)nw.textContent=t;nw.classList.toggle('w',typeof n!=='string')}
 
 /* ---------- per-frame lesson + instructor step ---------- */
 function schoolStep(dt){
@@ -3727,6 +3891,9 @@ function start(){
   F.shown=false;schoolAfterStart();ctlUI();audioStart();hud()}
 [...$('envChips').querySelectorAll('.chip')].forEach(b=>{b.setAttribute('aria-pressed',b.dataset.k===PLAYER_ENV);b.addEventListener('click',()=>{PLAYER_ENV=b.dataset.k;try{localStorage.setItem('adf-env',PLAYER_ENV)}catch(_){}
   [...$('envChips').querySelectorAll('.chip')].forEach(x=>x.setAttribute('aria-pressed',x===b));if(F&&F.phase==='intro')newFlight();mpPush()})});
+function sizeChips(){[...$('sizeChips').querySelectorAll('.chip')].forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===BSIZE));const S=BSPEC[BSIZE];
+  $('sizeSum').textContent=`${S.cu} cu ft · ${S.burner} · ${S.nt} cylinders · pilot + ${S.pax} · climb and descent within ${fmtFt(S.rate)} ft/min. Flight-school lessons use the big balloon.`}
+[...$('sizeChips').querySelectorAll('.chip')].forEach(b=>b.addEventListener('click',()=>{BSIZE=b.dataset.s;try{localStorage.setItem('adf-size',BSIZE)}catch(_){}sizeChips()}));sizeChips();
 $('go').addEventListener('click',()=>{SCHOOL.cur=null;SCHOOL.L=null;start()});$('again').addEventListener('click',start);
 
 let READY_WORLD=false;layout();setQ(HIGH);drillChips();sLoad();coachChips();sInit();loadAssets();loadLand();
@@ -3744,7 +3911,7 @@ requestAnimationFrame(frame);
   var home=navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||(window.matchMedia&&matchMedia('(display-mode: fullscreen)').matches);
   (function reg(){var g=document.getElementById('go');if(g&&g.disabled){setTimeout(reg,1500);return}setTimeout(function(){navigator.serviceWorker.register('sw.js').catch(function(){})},1500)})();
   function say(t){el.textContent=t;el.hidden=false}
-  function check(n){caches.open('adf-v3').then(function(c){return c.match('assets/people.json')}).then(function(m){
+  function check(n){caches.open('adf-v4').then(function(c){return c.match('assets/people.json')}).then(function(m){
     if(m)say('✓ Saved on this phone: it plays with no internet.'+(ios&&!home?' To install: tap Share, then Add to Home Screen.':''));
     else{say('Saving the game for offline play (about 17 MB). Keep this open on Wi-Fi…');if(n<200)setTimeout(function(){check(n+1)},3000)}}).catch(function(){})}
   check(0)})();
